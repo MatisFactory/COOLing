@@ -1,0 +1,1 @@
+#define COOLING_DLL __declspec(dllexport)
