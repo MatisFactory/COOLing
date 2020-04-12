@@ -10,10 +10,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_subdirectory(COOLing)
+add_subdirectory(source/COOLing)
 
 set(FILES
-     main.cpp)
+     source/main.cpp)
 
 add_executable(main ${FILES})
 
