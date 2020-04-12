@@ -11,24 +11,24 @@ using namespace glm;
 
 int main() {
 
-	// Инициализируем GLFW
-	if (!glfwInit())
-	{
-		fprintf(stderr, "Ошибка при инициализации GLFWn");
+	GLFWwindow* window = NULL;
+
+	// initialize the GLFW library
+	if (!glfwInit()) {
 		return -1;
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, 4); // 4x Сглаживание
-	glfwWindowHint(GLFW_VERSION_MAJOR, 3); // Мы хотим использовать OpenGL 3.3
-	glfwWindowHint(GLFW_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // Мы не хотим старый OpenGL
+	// setting the opengl version
+	int major = 3;
+	int minor = 3;
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Открыть окно и создать в нем контекст OpenGL
-	GLFWwindow* window; // (В сопроводительном исходном коде эта переменная является глобальной)
-	window = glfwCreateWindow(1024, 768, "Tutorial 01", NULL, NULL);
-	if (window == NULL) {
-		fprintf(stderr, "Невозможно открыть окно GLFW. Если у вас Intel GPU, то он не поддерживает версию 3.3. Попробуйте версию уроков для OpenGL 2.1.n");
+	// create the window
+	window = glfwCreateWindow(1024, 768, "oops", NULL, NULL);
+	if (!window) {
 		glfwTerminate();
 		return -1;
 	}
