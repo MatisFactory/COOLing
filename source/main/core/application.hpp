@@ -2,8 +2,6 @@
 
 #include "window.hpp"
 
-#include "shader/shader.hpp"
-
 class Application
 {
 public:
@@ -12,5 +10,4 @@ public:
 	void run();
 private:
 	Window m_window;
-	Shader m_shader;
 };
