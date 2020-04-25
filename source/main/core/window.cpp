@@ -2,6 +2,13 @@
 
 #include <cassert>
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and 
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
+}
+
 Window::Window(WindowSettings settings /*= {}*/)
 	: m_settings(settings)
 {
@@ -19,6 +26,7 @@ Window::Window(WindowSettings settings /*= {}*/)
 	m_window = glfwCreateWindow(settings.width, settings.height, settings.title.c_str(), NULL, NULL);
 	assert(m_window);
 	glfwMakeContextCurrent(m_window);
+	glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
 
 	glewExperimental = GL_TRUE;
 	// Initialize GLEW to setup the OpenGL Function pointers
