@@ -11,6 +11,7 @@ set(FILES
 	 core/window.cpp
 	 core/window.hpp
 	 core/settings/window_settings.hpp
+	 core/shader/shader.hpp
 	 )
 
 add_executable(main ${FILES})
