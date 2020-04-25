@@ -16,6 +16,8 @@ set(FILES
 
 add_executable(main ${FILES})
 
+target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+
 AUTO_GROUP_SOURCE(${FILES})
 
 install(TARGETS main

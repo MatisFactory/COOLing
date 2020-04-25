@@ -1,8 +1,8 @@
 #pragma once
 
-#include "window.hpp"
+#include <core/window.hpp>
 
-#include "shader/shader.hpp"
+#include <core/shader/shader.hpp>
 
 class Application
 {

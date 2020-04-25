@@ -3,7 +3,7 @@
 #include <gl/glew.h>
 #include <glfw/glfw3.h>
 
-#include "settings/window_settings.hpp"
+#include <core/settings/window_settings.hpp>
 
 class Window
 {
