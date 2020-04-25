@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
-project(COOLing)
+project(cooling)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

@@ -1,9 +1,17 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
+project(main)
+
 include(../../cmake/AutoSourceGroup.cmake)
 
 set(FILES
-     main.cpp)
+     main.cpp
+	 core/application.cpp
+	 core/application.hpp
+	 core/window.cpp
+	 core/window.hpp
+	 core/settings/window_settings.hpp
+	 )
 
 add_executable(main ${FILES})
 
