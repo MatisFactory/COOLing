@@ -31,6 +31,8 @@ Window::Window(WindowSettings settings /*= {}*/)
 	glewExperimental = GL_TRUE;
 	// Initialize GLEW to setup the OpenGL Function pointers
 	assert(glewInit() == GLEW_OK);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 Window::~Window()
@@ -43,8 +45,13 @@ bool Window::windowShouldClose()
 	return glfwWindowShouldClose(m_window);
 }
 
-GLFWwindow* Window::getGLFWwindow()
+GLFWwindow* Window::getGLFWwindow() const
 {
 	return m_window;
+}
+
+WindowSettings Window::getWindowSettings() const
+{
+	return m_settings;
 }
 

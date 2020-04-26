@@ -12,7 +12,9 @@ public:
 	~Window();
 
 	bool windowShouldClose();
-	GLFWwindow* getGLFWwindow();
+	
+	GLFWwindow* getGLFWwindow() const;
+	WindowSettings getWindowSettings() const;
 private:
 	GLFWwindow* m_window = nullptr;
 	WindowSettings m_settings;

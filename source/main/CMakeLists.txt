@@ -12,6 +12,8 @@ set(FILES
 	 core/window.hpp
 	 core/settings/window_settings.hpp
 	 core/shader/shader.hpp
+	 models/cube.cpp
+	 models/cube.hpp
 	 )
 
 add_executable(main ${FILES})
