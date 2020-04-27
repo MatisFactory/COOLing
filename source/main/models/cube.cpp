@@ -1,5 +1,6 @@
 #include <models/cube.hpp>
 
+#include <glm/gtc/type_ptr.hpp>
 #include <GLFW/glfw3.h>
 
 #include <random>
@@ -48,8 +49,9 @@ namespace
 	};
 } // namespace
 
-Cube::Cube(const glm::mat4& transform)
+Cube::Cube(const glm::mat4& transform, GLuint programID)
 	: m_transform(transform)
+	, m_transformLocation(glGetUniformLocation(programID, "model"))
 {
 	regenerateColors();
 	initOpenGLObjects();
@@ -64,6 +66,7 @@ Cube::~Cube()
 
 void Cube::draw()
 {
+	glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(m_transform));
 	glBindVertexArray(m_VAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -71,34 +74,29 @@ void Cube::draw()
 
 void Cube::initOpenGLObjects()
 {
-	GLuint VBO, VAO, IBO, colorVBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &colorVBO);
-	glGenBuffers(1, &IBO);
+	glGenVertexArrays(1, &m_VAO);
+	glGenBuffers(1, &m_VBO);
+	glGenBuffers(1, &m_colorVBO);
+	glGenBuffers(1, &m_IBO);
 
-	glBindVertexArray(VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindVertexArray(m_VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(m_colors), m_colors, GL_STATIC_DRAW);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
-	m_VAO = VAO;
-	m_VBO = VBO;
-	m_IBO = IBO;
 }
 
 void Cube::regenerateColors()

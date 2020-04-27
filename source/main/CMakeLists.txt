@@ -10,8 +10,13 @@ set(FILES
 	 core/application.hpp
 	 core/window.cpp
 	 core/window.hpp
+	 core/camera/camera.cpp
+	 core/camera/camera.hpp
+	 core/clock/clock.cpp
+	 core/clock/clock.hpp
 	 core/settings/window_settings.hpp
 	 core/shader/shader.hpp
+	 core/signal/signal.hpp
 	 models/cube.cpp
 	 models/cube.hpp
 	 )

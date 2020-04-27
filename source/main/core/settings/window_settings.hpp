@@ -4,7 +4,7 @@
 
 struct WindowSettings
 {
-	size_t width = 1280;
-	size_t height = 720;
+	float width = 1280;
+	float height = 720;
 	std::string title = "cooling 0_0";
 };

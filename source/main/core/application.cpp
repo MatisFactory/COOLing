@@ -1,20 +1,31 @@
 #include <core/application.hpp>
-#include <models/cube.hpp>
+#include <core/clock/clock.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <cassert>
+#include <random>
+
+namespace
+{
+	static constexpr size_t COUNT_OF_CUBES = 10000;
+	static constexpr float WIDTH = 500.f;
+	static constexpr float HEIGHT = 20;
+}
 
 Application::Application()
 	: m_shader("../../../shaders/VertexShader.txt", "../../../shaders/FragmentShader.txt")
+	, m_camera(m_window, glm::vec3(0.f, 0.f, 0.f), 
+		glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f), 45.f, 0.1f, 1000.f)
 {
+	initModels();
 }
 
 void Application::run()
 {
-	Cube cube(glm::mat4(1.f));
+	Clock clock;
 
 	while (!m_window.windowShouldClose())
 	{
@@ -25,25 +36,51 @@ void Application::run()
 
 		m_shader.use();
 
-		WindowSettings settings = m_window.getWindowSettings();
+		clock.computeDeltaTime();
+		tick(clock.getDeltaTime());
+		draw();
 
-		// Create transformations
-		glm::mat4 model = glm::mat4(1.f);
-		glm::mat4 view = glm::mat4(1.f);
-		glm::mat4 projection = glm::mat4(1.f);
-		view = glm::lookAt(glm::vec3(5.f, 6.f, 8.f), glm::vec3(0.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f));
-		projection = glm::perspective(45.0f, (GLfloat)settings.width / (GLfloat)settings.height, 0.1f, 100.0f);
-
-		GLint modelLoc = glGetUniformLocation(m_shader.ID, "model");
-		GLint viewLoc = glGetUniformLocation(m_shader.ID, "view");
-		GLint projLoc = glGetUniformLocation(m_shader.ID, "projection");
-
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-		cube.draw();
-
+		setupViewProjection();
 		glfwSwapBuffers(m_window.getGLFWwindow());
 	}
+}
+
+void Application::tick(float dt)
+{
+	m_camera.tick(dt);
+}
+
+void Application::draw()
+{
+	for (auto& cube : m_cubes)
+	{
+		cube.draw();
+	}
+}
+
+void Application::initModels()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution plate(-WIDTH, WIDTH);
+	std::uniform_real_distribution vertical(-HEIGHT, HEIGHT);
+
+	m_cubes.reserve(COUNT_OF_CUBES);
+
+	for (size_t i = 0; i < COUNT_OF_CUBES; i++)
+	{
+		glm::mat4 transform = glm::mat4(1.f);
+		transform[3][0] = plate(gen);
+		transform[3][1] = vertical(gen);
+		transform[3][2] = plate(gen);
+		m_cubes.emplace_back(transform, m_shader.ID);
+	}
+}
+
+void Application::setupViewProjection()
+{
+	GLint viewLoc = glGetUniformLocation(m_shader.ID, "view");
+	GLint projLoc = glGetUniformLocation(m_shader.ID, "projection");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(m_camera.getView()));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(m_camera.getProjection()));
 }

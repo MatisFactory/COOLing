@@ -2,22 +2,16 @@
 
 #include <cassert>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	// make sure the viewport matches the new window dimensions; note that width and 
-	// height will be significantly larger than specified on retina displays.
-	glViewport(0, 0, width, height);
-}
+Signal<GLfloat, GLfloat> Window::windowSizeChanged;
 
-Window::Window(WindowSettings settings /*= {}*/)
-	: m_settings(settings)
+Window::Window(WindowSettings settings)
+	: m_windowSettings(settings)
 {
-	// initialize the GLFW library
 	assert(glfwInit());
 
-	// setting the opengl version
 	int major = 3;
 	int minor = 3;
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -26,13 +20,20 @@ Window::Window(WindowSettings settings /*= {}*/)
 	m_window = glfwCreateWindow(settings.width, settings.height, settings.title.c_str(), NULL, NULL);
 	assert(m_window);
 	glfwMakeContextCurrent(m_window);
-	glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+
+	bindKeyCallback();
+	bindFrameBufferCallback();
 
 	glewExperimental = GL_TRUE;
-	// Initialize GLEW to setup the OpenGL Function pointers
 	assert(glewInit() == GLEW_OK);
 
 	glEnable(GL_DEPTH_TEST);
+
+	windowSizeChanged.connect([this](GLfloat width, GLfloat height)
+	{
+		m_windowSettings.width = width;
+		m_windowSettings.height = height;
+	});
 }
 
 Window::~Window()
@@ -45,13 +46,43 @@ bool Window::windowShouldClose()
 	return glfwWindowShouldClose(m_window);
 }
 
-GLFWwindow* Window::getGLFWwindow() const
+GLFWwindow* Window::getGLFWwindow()
 {
 	return m_window;
 }
 
 WindowSettings Window::getWindowSettings() const
 {
-	return m_settings;
+	return m_windowSettings;
+}
+
+bool Window::isKeyPressed(int key) const
+{
+	return glfwGetKey(m_window, key) == GLFW_PRESS;
+}
+
+void Window::bindKeyCallback()
+{
+	/*auto keyCallback = [](GLFWwindow*, int key, int, int action, int)
+	{
+		if (action == GLFW_PRESS)
+		{
+			keyPressSignal(key);
+		}
+	};
+
+	glfwSetKeyCallback(m_window, keyCallback);*/
+}
+
+void Window::bindFrameBufferCallback()
+{
+	auto frameBufferSizeCallback = [](GLFWwindow* window, int width, int height)
+	{
+		glViewport(0, 0, width, height);
+
+		windowSizeChanged(width, height);
+	};
+
+	glfwSetFramebufferSizeCallback(m_window, frameBufferSizeCallback);
 }
 
