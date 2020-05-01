@@ -1,5 +1,8 @@
 #include <core/window.hpp>
 
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw_gl3.h>
+
 #include <cassert>
 
 Signal<GLfloat, GLfloat> Window::windowSizeChanged;
@@ -26,6 +29,8 @@ Window::Window(WindowSettings settings)
 
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
+
+	ImGui_ImplGlfwGL3_Init(m_window, true);
 
 	glEnable(GL_DEPTH_TEST);
 

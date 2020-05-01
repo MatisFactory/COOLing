@@ -5,6 +5,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw_gl3.h>
+
 #include <cassert>
 #include <random>
 
@@ -29,6 +32,15 @@ void Application::run()
 
 	while (!m_window.windowShouldClose())
 	{
+		ImGui_ImplGlfwGL3_NewFrame();
+
+		{
+			static float f = 0.0f;
+			ImGui::Text("Hello, world!");
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", clock.getDeltaTime(), 1000.f/clock.getDeltaTime());
+		}
+
 		glfwPollEvents();
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -39,6 +51,8 @@ void Application::run()
 		clock.computeDeltaTime();
 		tick(clock.getDeltaTime());
 		draw();
+
+		ImGui::Render();
 
 		setupViewProjection();
 		glfwSwapBuffers(m_window.getGLFWwindow());

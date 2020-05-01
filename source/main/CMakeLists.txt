@@ -24,6 +24,8 @@ set(FILES
 add_executable(main ${FILES})
 
 target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(main PUBLIC "${CMAKE_SOURCE_DIR}/source")
+
 
 AUTO_GROUP_SOURCE(${FILES})
 
@@ -34,5 +36,8 @@ install(TARGETS main
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)
 
-target_link_libraries(main PRIVATE cooling)
+target_link_libraries(main PRIVATE 
+	cooling
+	imgui)
+
 set_target_properties(cooling PROPERTIES LINKER_LANGUAGE CXX)
