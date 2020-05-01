@@ -35,9 +35,6 @@ void Application::run()
 		ImGui_ImplGlfwGL3_NewFrame();
 
 		{
-			static float f = 0.0f;
-			ImGui::Text("Hello, world!");
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", clock.getDeltaTime(), 1000.f/clock.getDeltaTime());
 		}
 

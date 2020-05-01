@@ -8,13 +8,13 @@ Clock::Clock()
 void Clock::computeDeltaTime()
 {
 	auto finish = std::chrono::system_clock::now();
-	m_deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(finish - m_startTime).count();
+	m_deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(finish - m_startTime).count();
 	m_startTime = finish;
 }
 
 float Clock::getDeltaTime() const
 {
-	return m_deltaTime;
+	return m_deltaTime / 1000.f;
 }
 
 float Clock::getFramerate() const
