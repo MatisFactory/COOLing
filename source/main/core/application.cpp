@@ -9,19 +9,10 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 #include <cassert>
-#include <random>
-
-namespace
-{
-	static constexpr size_t COUNT_OF_CUBES = 5000;
-	static constexpr float WIDTH = 500;
-	static constexpr float HEIGHT = 20;
-}
 
 Application::Application()
 	: m_cameraManager(m_window)
 {
-	initModels();
 }
 
 void Application::run()
@@ -56,31 +47,8 @@ void Application::tick(float dt)
 
 void Application::draw()
 {
+	m_cubeManager.draw();
 	m_cameraDrawer.draw();
-
-	for (auto& cube : m_cubes)
-	{
-		cube.draw();
-	}
-}
-
-void Application::initModels()
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution plate(-WIDTH, WIDTH);
-	std::uniform_real_distribution vertical(-HEIGHT, HEIGHT);
-
-	m_cubes.reserve(COUNT_OF_CUBES);
-
-	for (size_t i = 0; i < COUNT_OF_CUBES; i++)
-	{
-		glm::mat4 transform = glm::mat4(1.f);
-		transform[3][0] = plate(gen);
-		transform[3][1] = vertical(gen);
-		transform[3][2] = plate(gen);
-		m_cubes.emplace_back(transform);
-	}
 }
 
 void Application::imguiNewFrame()

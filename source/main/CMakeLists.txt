@@ -21,6 +21,8 @@ set(FILES
 	 core/settings/window_settings.hpp
 	 core/shader/shader.hpp
 	 core/signal/signal.hpp
+	 models/cube_manager.cpp
+	 models/cube_manager.hpp
 	 models/cube.cpp
 	 models/cube.hpp
 	 )

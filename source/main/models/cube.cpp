@@ -9,7 +9,7 @@
 
 namespace
 {
-	static constexpr size_t COUNT_VERTEX_PART = 12*3;
+	constexpr size_t COUNT_VERTEX_PART = 12*3;
 	GLfloat vertices[] = 
 	{
 		 -1.f, -1.f, -1.f,
@@ -52,9 +52,7 @@ namespace
 } // namespace
 
 Cube::Cube(const glm::mat4& transform)
-	: m_shader("../../../shaders/Cube.vertexShader", "../../../shaders/Cube.fragmentShader")
-	, m_transform(transform)
-	, m_transformLocation(glGetUniformLocation(m_shader.ID, "model"))
+	: m_transform(transform)
 {
 	regenerateColors();
 	initOpenGLObjects();
@@ -69,13 +67,14 @@ Cube::~Cube()
 
 void Cube::draw()
 {
-	m_shader.use();
-	setupViewProjection();
-
-	glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(m_transform));
 	glBindVertexArray(m_VAO);
 	glDrawElements(GL_TRIANGLES, COUNT_VERTEX_PART, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+}
+
+glm::mat4 Cube::worldTransform() const
+{
+	return m_transform;
 }
 
 void Cube::initOpenGLObjects()
@@ -115,12 +114,4 @@ void Cube::regenerateColors()
 	{
 		m_colors[i] = dis(gen);
 	}
-}
-
-void Cube::setupViewProjection()
-{
-	GLint viewLoc = glGetUniformLocation(m_shader.ID, "view");
-	GLint projLoc = glGetUniformLocation(m_shader.ID, "projection");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::mainViewMatrix()));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::mainProjectionMatrix()));
 }
