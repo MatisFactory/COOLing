@@ -1,7 +1,8 @@
 #pragma once
 
 #include <core/window.hpp>
-#include <core/camera/camera.hpp>
+#include <core/camera/camera_manager.hpp>
+#include <core/clock/clock.hpp>
 #include <core/shader/shader.hpp>
 #include <models/cube.hpp>
 
@@ -18,10 +19,16 @@ private:
 	void draw();
 	void initModels();
 	void setupViewProjection();
+
+	void imguiNewFrame();
+	void addToDrawImGui();
+	void renderImGui();
 private:
 	Window m_window;
-	Camera m_camera;
 	Shader m_shader;
+	Clock m_clock;
+
+	CameraManager m_cameraManager;
 
 	std::vector<Cube> m_cubes;
 };

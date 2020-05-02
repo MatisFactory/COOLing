@@ -10,7 +10,7 @@ namespace
 } // namespace
 
 Camera::Camera(Window& window, const glm::vec3& position, const glm::vec3& direction,
-	const glm::vec3& up, float fov, float near, float far)
+	const glm::vec3& up, float fov, float near, float far, std::string name)
 	: m_window(window)
 	, m_position(position)
 	, m_direction(glm::normalize(direction))
@@ -18,6 +18,7 @@ Camera::Camera(Window& window, const glm::vec3& position, const glm::vec3& direc
 	, m_fov(fov)
 	, m_near(near)
 	, m_far(far)
+	, m_name(name)
 {
 }
 
@@ -29,6 +30,11 @@ glm::mat4 Camera::getView() const
 glm::mat4 Camera::getProjection() const
 {
 	return glm::perspective(m_fov, m_window.getWindowSettings().width/ m_window.getWindowSettings().height, m_near, m_far);
+}
+
+const char* Camera::getName() const
+{
+	return m_name.c_str();
 }
 
 void Camera::tick(float dt)

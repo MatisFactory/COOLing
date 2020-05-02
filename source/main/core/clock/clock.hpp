@@ -5,7 +5,7 @@ class Clock
 {
 public:
 	Clock();
-	void computeDeltaTime();
+	void update();
 	float getDeltaTime() const;
 	float getFramerate() const;
 private:

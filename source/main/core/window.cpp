@@ -1,7 +1,9 @@
 #include <core/window.hpp>
 
 #include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw_gl3.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
+
 
 #include <cassert>
 
@@ -30,7 +32,11 @@ Window::Window(WindowSettings settings)
 	glewExperimental = GL_TRUE;
 	assert(glewInit() == GLEW_OK);
 
-	ImGui_ImplGlfwGL3_Init(m_window, true);
+	m_context = ImGui::CreateContext();
+	//ImGuiIO& io = ImGui::GetIO();
+
+	ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+	ImGui_ImplOpenGL3_Init();
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -43,6 +49,9 @@ Window::Window(WindowSettings settings)
 
 Window::~Window()
 {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext(m_context);
 	glfwTerminate();
 }
 

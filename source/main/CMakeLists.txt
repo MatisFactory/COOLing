@@ -12,6 +12,8 @@ set(FILES
 	 core/window.hpp
 	 core/camera/camera.cpp
 	 core/camera/camera.hpp
+	 core/camera/camera_manager.cpp
+	 core/camera/camera_manager.hpp
 	 core/clock/clock.cpp
 	 core/clock/clock.hpp
 	 core/settings/window_settings.hpp

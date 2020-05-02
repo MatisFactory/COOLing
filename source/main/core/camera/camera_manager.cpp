@@ -1,0 +1,61 @@
+#include <core/camera/camera_manager.hpp>
+
+#include <cassert>
+
+#define CAMERA_PARAMS(id) m_window, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f), \
+		glm::vec3(0.f, 1.f, 0.f), 45.f, 0.1f, 1000.f, "Camera " + std::to_string(id + 1)
+
+namespace
+{
+	static const std::string CAMERA_NAME;
+}
+
+CameraManager::CameraManager(Window& window, uint32_t count)
+	: m_window(window)
+	, m_currentCameraIndex(0)
+{
+	m_cameraPack.reserve(count);
+	
+	for (int i = 0; i < count; i++)
+	{
+		m_cameraPack.push_back(std::make_shared<Camera>(CAMERA_PARAMS(i)));
+	}
+
+	m_mainCamera = m_cameraPack[m_currentCameraIndex];
+
+}
+
+Camera* CameraManager::getMainCamera()
+{
+	return m_cameraPack[m_currentCameraIndex].get();
+}
+
+int CameraManager::getMainCameraIndex() const
+{
+	return m_currentCameraIndex;
+}
+
+int CameraManager::count() const
+{
+	return m_cameraPack.size();
+}
+
+void CameraManager::setMainCamera(int index)
+{
+	m_currentCameraIndex = index;
+}
+
+CameraPack CameraManager::getCameraPack() const
+{
+	return m_cameraPack;
+}
+
+void CameraManager::tick(float dt)
+{	
+	getMainCamera()->tick(dt);
+}
+
+void CameraManager::insertCamera()
+{
+	m_cameraPack.push_back(std::make_shared<Camera>(CAMERA_PARAMS(m_cameraPack.size())));
+}

@@ -5,7 +5,7 @@ Clock::Clock()
 	m_startTime = std::chrono::system_clock::now();
 }
 
-void Clock::computeDeltaTime()
+void Clock::update()
 {
 	auto finish = std::chrono::system_clock::now();
 	m_deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(finish - m_startTime).count();

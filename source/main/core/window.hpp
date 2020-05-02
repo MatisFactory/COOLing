@@ -6,6 +6,8 @@
 #include <core/settings/window_settings.hpp>
 #include <core/signal/signal.hpp>
 
+struct ImGuiContext;
+
 class Window
 {
 public:
@@ -27,4 +29,7 @@ private:
 private:
 	GLFWwindow* m_window;
 	WindowSettings m_windowSettings;
+
+	// imgui
+	ImGuiContext* m_context = nullptr;
 };
