@@ -10,22 +10,20 @@ using Plane = glm::vec4;
 
 struct COOLING_DLL FrustumPlanes
 {
-	Plane left;
-	Plane right;
-	Plane bottom;
-	Plane top;
-	Plane near;
-	Plane far;
+	Plane planes[6];
+
+	Plane operator[](const uint32_t& index) const { return planes[index]; }
+	Plane& operator[](const uint32_t& index) { return planes[index]; }
 };
 
 class COOLING_DLL FrustumView
 {
 public:
-	FrustumView(const glm::mat4& viewProjection);
+	FrustumView();
 
 	void setViewProjection(const glm::mat4& viewProjection);
 	FrustumPlanes getFrustumPlanes() const;
-private:
+
 	void updateFrustumView();
 private:
 	glm::mat4 m_viewProjection;

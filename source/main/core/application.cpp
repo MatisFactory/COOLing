@@ -10,9 +10,18 @@
 
 #include <cassert>
 
+namespace
+{
+	static bool isOpen = true;
+	static bool isCullingOptimizationForMain = true;
+	static bool isCullingOptimizationForNotMain = false;
+}
+
 Application::Application()
 	: m_cameraManager(m_window)
 {
+	m_cubeManager.setCullingManager(&m_cullingManager);
+	m_cubeManager.init();
 }
 
 void Application::run()
@@ -42,13 +51,26 @@ void Application::run()
 void Application::tick(float dt)
 {
 	m_cameraManager.tick(dt);
-	m_cameraDrawer.setCameraToDraw(m_cameraManager.getFirstNotMainCamera());
+
+	Camera* notMainCamera = m_cameraManager.getFirstNotMainCamera();
+	m_cameraDrawer.setCameraToDraw(notMainCamera);
+
+	if(isCullingOptimizationForMain)
+	{
+		m_cullingManager.setViewProjectionMatrix(CameraManager::mainProjectionMatrix() * CameraManager::mainViewMatrix());
+	}
+	else if (isCullingOptimizationForNotMain && notMainCamera)
+	{
+		m_cullingManager.setViewProjectionMatrix(notMainCamera->getProjection() * notMainCamera->getView());
+	}
+
+	m_cullingManager.update();
 }
 
 void Application::draw()
 {
-	m_cubeManager.draw();
 	m_cameraDrawer.draw();
+	m_cubeManager.draw();
 }
 
 void Application::imguiNewFrame()
@@ -60,8 +82,6 @@ void Application::imguiNewFrame()
 
 void Application::addToDrawImGui()
 {
-	static bool isOpen = true;
-
 	if (!ImGui::Begin("Debug window", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		ImGui::End();
@@ -93,6 +113,19 @@ void Application::addToDrawImGui()
 		if (ImGui::Button("Add camera"))
 		{
 			m_cameraManager.insertCamera();
+		}
+
+		if (ImGui::Checkbox("Culling objects by main camera", &isCullingOptimizationForMain) ||
+			ImGui::Checkbox("Culling objects by not main camera", &isCullingOptimizationForNotMain))
+		{
+			if (isCullingOptimizationForMain || isCullingOptimizationForNotMain)
+			{
+				m_cubeManager.setCullingManager(&m_cullingManager);
+			}
+			else
+			{
+				m_cubeManager.setCullingManager(nullptr);
+			}
 		}
 
 		ImGui::End();

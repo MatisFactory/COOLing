@@ -7,6 +7,8 @@
 #include <main/models/cube_manager.hpp>
 #include <main/core/drawers/camera_drawer.hpp>
 
+#include <cooling/culling_manager.hpp>
+
 class Application
 {
 public:
@@ -25,6 +27,7 @@ private:
 	Clock m_clock;
 
 	CubeManager m_cubeManager;
+	Cooling::CullingManager m_cullingManager;
 
 	CameraManager m_cameraManager;
 	CameraDrawer m_cameraDrawer;

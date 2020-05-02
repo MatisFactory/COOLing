@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include <vector>
+
 class Cube
 {
 public:
@@ -10,6 +12,7 @@ public:
 
 	void draw();
 
+	std::vector<glm::vec3> getVertices() const;
 	glm::mat4 worldTransform() const;
 private:
 	void initOpenGLObjects();

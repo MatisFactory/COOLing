@@ -60,7 +60,7 @@ void CameraDrawer::draw()
 	constructModel();
 	initOpenGlObjects();
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_BLEND);
 	glDepthMask(GL_FALSE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -71,7 +71,7 @@ void CameraDrawer::draw()
 
 	glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void CameraDrawer::constructModel()
@@ -79,7 +79,7 @@ void CameraDrawer::constructModel()
 	if(m_camera)
 	{
 		float near = m_camera->m_near;
-		float far = m_camera->m_far/2.f;
+		float far = m_camera->m_far;
 
 		float heightNearPlane = m_camera->m_near * glm::tan(m_camera->m_fov/2) * 2;
 		float widthNearPlane = heightNearPlane * m_camera->getRatio();

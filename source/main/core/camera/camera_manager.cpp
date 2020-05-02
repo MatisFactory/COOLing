@@ -2,11 +2,13 @@
 
 #include <cassert>
 
-#define CAMERA_PARAMS(id) m_window, 60.f, 0.1f, 500.f, "Camera " + std::to_string(id + 1)
+#define CAMERA_PARAMS(id) m_window, 60.f, 0.1f, 1000.f, "Camera " + std::to_string(id + 1)
 
 namespace
 {
 	static const std::string CAMERA_NAME;
+	constexpr float DEFAULT_FOV = 1000.f;
+	constexpr float MAIN_CAMERA_FOV = DEFAULT_FOV * 5;
 }
 
 glm::mat4 CameraManager::s_viewMatrixMainCamera;
@@ -44,7 +46,9 @@ int CameraManager::size() const
 
 void CameraManager::setMainCamera(int index)
 {
+	m_cameraPack[m_currentCameraIndex]->setFov(DEFAULT_FOV);
 	m_currentCameraIndex = index;
+	m_cameraPack[m_currentCameraIndex]->setFov(MAIN_CAMERA_FOV);
 }
 
 CameraPack CameraManager::getCameraPack() const

@@ -56,6 +56,11 @@ glm::mat4 Camera::getProjection() const
 	return glm::perspective(m_fov, getRatio(), m_near, m_far);
 }
 
+void Camera::setFov(float value)
+{
+	m_fov = value;
+}
+
 float Camera::getRatio() const
 {
 	return m_window.getWindowSettings().width / m_window.getWindowSettings().height;

@@ -72,6 +72,18 @@ void Cube::draw()
 	glBindVertexArray(0);
 }
 
+std::vector<glm::vec3> Cube::getVertices() const
+{
+	std::vector<glm::vec3> result;
+	for (int i = 0; i < 8; i++)
+	{
+		glm::vec4 v = glm::vec4(vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2], 1);
+		result.push_back(m_transform*v);
+	}
+
+	return result;
+}
+
 glm::mat4 Cube::worldTransform() const
 {
 	return m_transform;

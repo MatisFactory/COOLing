@@ -5,9 +5,17 @@ project(cooling)
 include(../../cmake/AutoSourceGroup.cmake)
 
 set(FILES
+     culling_manager.cpp
+     culling_manager.hpp
      frustum_view.cpp
      frustum_view.hpp
-     export/cooling_dll.hpp)
+     object.cpp
+     object.hpp
+     export/cooling_dll.hpp
+     utils/aabb.hpp
+     utils/aabb.cpp
+     utils/visibility_tests.cpp
+     utils/visibility_tests.hpp)
 
 add_library(cooling SHARED
 	${FILES})
