@@ -8,7 +8,7 @@
 
 namespace
 {
-	constexpr float WIDTH = 500;
+	constexpr float WIDTH = 20;
 	constexpr float HEIGHT = 20;
 }
 

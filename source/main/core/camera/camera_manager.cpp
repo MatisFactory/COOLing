@@ -2,8 +2,7 @@
 
 #include <cassert>
 
-#define CAMERA_PARAMS(id, far) m_window, glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f), \
-		glm::vec3(0.f, 1.f, 0.f), 75.f, 0.1f, far, "Camera " + std::to_string(id + 1)
+#define CAMERA_PARAMS(id) m_window, 60.f, 0.1f, 500.f, "Camera " + std::to_string(id + 1)
 
 namespace
 {
@@ -21,7 +20,7 @@ CameraManager::CameraManager(Window& window, uint32_t count)
 	
 	for (int i = 0; i < count; i++)
 	{
-		m_cameraPack.push_back(std::make_shared<Camera>(CAMERA_PARAMS(i, 1000.f)));
+		m_cameraPack.push_back(std::make_shared<Camera>(CAMERA_PARAMS(i)));
 	}
 
 	m_mainCamera = m_cameraPack[m_currentCameraIndex];
@@ -85,5 +84,5 @@ void CameraManager::tick(float dt)
 
 void CameraManager::insertCamera()
 {
-	m_cameraPack.push_back(std::make_shared<Camera>(CAMERA_PARAMS(m_cameraPack.size(), 500.f)));
+	m_cameraPack.push_back(std::make_shared<Camera>(CAMERA_PARAMS(m_cameraPack.size())));
 }

@@ -60,6 +60,7 @@ void CameraDrawer::draw()
 	constructModel();
 	initOpenGlObjects();
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_BLEND);
 	glDepthMask(GL_FALSE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -70,6 +71,7 @@ void CameraDrawer::draw()
 
 	glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void CameraDrawer::constructModel()
@@ -85,9 +87,9 @@ void CameraDrawer::constructModel()
 		float heightFarPlane = far * glm::tan(m_camera->m_fov / 2) * 2;
 		float widthFarPlane = heightFarPlane * m_camera->getRatio();
 
-		glm::vec3 right = glm::normalize(glm::cross(m_camera->m_direction, m_camera->m_up));
+		glm::vec3 right = glm::normalize(glm::cross(m_camera->getDirection(), m_camera->m_up));
 		glm::vec3 position = m_camera->m_position;
-		glm::vec3 direction = m_camera->m_direction;
+		glm::vec3 direction = m_camera->getDirection();
 		glm::vec3 up = m_camera->m_up;
 		
 		glm::vec3 verticies[COUNT_UNIQUE_VERTEX];
