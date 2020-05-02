@@ -52,7 +52,7 @@ namespace
 } // namespace
 
 Cube::Cube(const glm::mat4& transform)
-	: m_shader("../../../shaders/VertexShader.txt", "../../../shaders/FragmentShader.txt")
+	: m_shader("../../../shaders/Cube.vertexShader", "../../../shaders/Cube.fragmentShader")
 	, m_transform(transform)
 	, m_transformLocation(glGetUniformLocation(m_shader.ID, "model"))
 {
