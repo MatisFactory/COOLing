@@ -1,17 +1,22 @@
+#include <main/core/shader/shader.hpp>
+
 #include <glm/glm.hpp>
-#include <gl/glew.h>
 
 class Cube
 {
 public:
-	Cube(const glm::mat4& transform, GLuint programID);
+	Cube(const glm::mat4& transform);
 	~Cube();
 	void draw();
 private:
 	void initOpenGLObjects();
 	void regenerateColors();
+	void setupViewProjection();
 private:
+	Shader m_shader;
+
 	glm::mat4 m_transform;
+
 	GLfloat m_colors[36];
 	GLint m_transformLocation;
 	GLuint m_VAO;

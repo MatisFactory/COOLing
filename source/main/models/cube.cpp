@@ -1,13 +1,15 @@
-#include <models/cube.hpp>
+#include <main/models/cube.hpp>
+#include <main/core/camera/camera_manager.hpp>
 
-#include <glm/gtc/type_ptr.hpp>
+#include <gl/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <random>
 
 namespace
 {
-	static constexpr size_t SIZE_TRIANGLE_VERTEX = 36;
+	static constexpr size_t COUNT_VERTEX_PART = 12*3;
 	GLfloat vertices[] = 
 	{
 		 -1.f, -1.f, -1.f,
@@ -49,9 +51,10 @@ namespace
 	};
 } // namespace
 
-Cube::Cube(const glm::mat4& transform, GLuint programID)
-	: m_transform(transform)
-	, m_transformLocation(glGetUniformLocation(programID, "model"))
+Cube::Cube(const glm::mat4& transform)
+	: m_shader("../../../shaders/VertexShader.txt", "../../../shaders/FragmentShader.txt")
+	, m_transform(transform)
+	, m_transformLocation(glGetUniformLocation(m_shader.ID, "model"))
 {
 	regenerateColors();
 	initOpenGLObjects();
@@ -66,9 +69,12 @@ Cube::~Cube()
 
 void Cube::draw()
 {
+	m_shader.use();
+	setupViewProjection();
+
 	glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(m_transform));
 	glBindVertexArray(m_VAO);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, COUNT_VERTEX_PART, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
@@ -105,8 +111,16 @@ void Cube::regenerateColors()
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<GLfloat> dis(0.0, 1.0);
 
-	for (int i = 0; i < SIZE_TRIANGLE_VERTEX; i++)
+	for (int i = 0; i < COUNT_VERTEX_PART; i++)
 	{
 		m_colors[i] = dis(gen);
 	}
+}
+
+void Cube::setupViewProjection()
+{
+	GLint viewLoc = glGetUniformLocation(m_shader.ID, "view");
+	GLint projLoc = glGetUniformLocation(m_shader.ID, "projection");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::mainViewMatrix()));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::mainProjectionMatrix()));
 }

@@ -1,10 +1,11 @@
 #pragma once
 
-#include <core/window.hpp>
-#include <core/camera/camera_manager.hpp>
-#include <core/clock/clock.hpp>
-#include <core/shader/shader.hpp>
-#include <models/cube.hpp>
+#include <main/core/window.hpp>
+#include <main/core/camera/camera_manager.hpp>
+#include <main/core/clock/clock.hpp>
+#include <main/core/shader/shader.hpp>
+#include <main/models/cube.hpp>
+#include <main/core/drawers/camera_drawer.hpp>
 
 #include <vector>
 
@@ -18,17 +19,16 @@ private:
 	void tick(float dt);
 	void draw();
 	void initModels();
-	void setupViewProjection();
 
 	void imguiNewFrame();
 	void addToDrawImGui();
 	void renderImGui();
 private:
 	Window m_window;
-	Shader m_shader;
 	Clock m_clock;
 
 	CameraManager m_cameraManager;
+	CameraDrawer m_cameraDrawer;
 
 	std::vector<Cube> m_cubes;
 };

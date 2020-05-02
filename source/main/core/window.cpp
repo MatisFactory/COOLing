@@ -1,4 +1,4 @@
-#include <core/window.hpp>
+#include <main/core/window.hpp>
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
@@ -33,7 +33,6 @@ Window::Window(WindowSettings settings)
 	assert(glewInit() == GLEW_OK);
 
 	m_context = ImGui::CreateContext();
-	//ImGuiIO& io = ImGui::GetIO();
 
 	ImGui_ImplGlfw_InitForOpenGL(m_window, true);
 	ImGui_ImplOpenGL3_Init();

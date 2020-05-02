@@ -16,6 +16,8 @@ set(FILES
 	 core/camera/camera_manager.hpp
 	 core/clock/clock.cpp
 	 core/clock/clock.hpp
+	 core/drawers/camera_drawer.hpp
+	 core/drawers/camera_drawer.cpp
 	 core/settings/window_settings.hpp
 	 core/shader/shader.hpp
 	 core/signal/signal.hpp
@@ -25,7 +27,7 @@ set(FILES
 
 add_executable(main ${FILES})
 
-target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+# target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(main PUBLIC "${CMAKE_SOURCE_DIR}/source")
 
 

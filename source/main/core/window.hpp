@@ -3,8 +3,8 @@
 #include <gl/glew.h>
 #include <glfw/glfw3.h>
 
-#include <core/settings/window_settings.hpp>
-#include <core/signal/signal.hpp>
+#include <main/core/settings/window_settings.hpp>
+#include <main/core/signal/signal.hpp>
 
 struct ImGuiContext;
 

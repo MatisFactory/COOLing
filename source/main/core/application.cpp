@@ -1,4 +1,4 @@
-#include <core/application.hpp>
+#include <main/core/application.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -13,14 +13,13 @@
 
 namespace
 {
-	static constexpr size_t COUNT_OF_CUBES = 10000;
-	static constexpr float WIDTH = 500.f;
+	static constexpr size_t COUNT_OF_CUBES = 5000;
+	static constexpr float WIDTH = 500;
 	static constexpr float HEIGHT = 20;
 }
 
 Application::Application()
-	: m_shader("../../../shaders/VertexShader.txt", "../../../shaders/FragmentShader.txt")
-	, m_cameraManager(m_window)
+	: m_cameraManager(m_window)
 {
 	initModels();
 }
@@ -38,14 +37,11 @@ void Application::run()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_shader.use();
-
 		m_clock.update();
 		tick(m_clock.getDeltaTime());
 
 		draw();
 		addToDrawImGui();
-		
 		renderImGui();
 
 		glfwSwapBuffers(m_window.getGLFWwindow());
@@ -55,11 +51,13 @@ void Application::run()
 void Application::tick(float dt)
 {
 	m_cameraManager.tick(dt);
-	setupViewProjection();
+	m_cameraDrawer.setCameraToDraw(m_cameraManager.getFirstNotMainCamera());
 }
 
 void Application::draw()
 {
+	m_cameraDrawer.draw();
+
 	for (auto& cube : m_cubes)
 	{
 		cube.draw();
@@ -81,16 +79,8 @@ void Application::initModels()
 		transform[3][0] = plate(gen);
 		transform[3][1] = vertical(gen);
 		transform[3][2] = plate(gen);
-		m_cubes.emplace_back(transform, m_shader.ID);
+		m_cubes.emplace_back(transform);
 	}
-}
-
-void Application::setupViewProjection()
-{
-	GLint viewLoc = glGetUniformLocation(m_shader.ID, "view");
-	GLint projLoc = glGetUniformLocation(m_shader.ID, "projection");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(m_cameraManager.getMainCamera()->getView()));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(m_cameraManager.getMainCamera()->getProjection()));
 }
 
 void Application::imguiNewFrame()
@@ -127,7 +117,7 @@ void Application::addToDrawImGui()
 		};
 
 		CameraPack cameraPack = m_cameraManager.getCameraPack();
-		if (ImGui::Combo("Camera pack", &currentCameraIndex, cameraGetter, static_cast<void*>(&cameraPack), m_cameraManager.count()))
+		if (ImGui::Combo("Camera pack", &currentCameraIndex, cameraGetter, static_cast<void*>(&cameraPack), m_cameraManager.size()))
 		{
 			m_cameraManager.setMainCamera(currentCameraIndex);
 		}
