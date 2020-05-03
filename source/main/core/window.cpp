@@ -4,15 +4,21 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-
-#include <cassert>
+#include <iostream>
 
 Signal<GLfloat, GLfloat> Window::windowSizeChanged;
 
 Window::Window(WindowSettings settings)
 	: m_windowSettings(settings)
 {
-	assert(glfwInit());
+	if (glfwInit())
+	{
+		std::cout << "GLFW is inited\n";
+	}
+	else
+	{
+		std::cout << "GLFW doesn't inited\n";
+	}
 
 	int major = 3;
 	int minor = 3;
@@ -23,14 +29,29 @@ Window::Window(WindowSettings settings)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	m_window = glfwCreateWindow(settings.width, settings.height, settings.title.c_str(), NULL, NULL);
-	assert(m_window);
+	if (m_window)
+	{
+		std::cout << "Window is created\n";
+	}
+	else
+	{
+		std::cout << "Can't create window\n";
+	}
 	glfwMakeContextCurrent(m_window);
 
 	bindKeyCallback();
 	bindFrameBufferCallback();
 
 	glewExperimental = GL_TRUE;
-	assert(glewInit() == GLEW_OK);
+
+	if (glewInit() == GLEW_OK)
+	{
+		std::cout << "Glew is inited\n";
+	}
+	else
+	{
+		std::cout << "Glew doesn't inited\n";
+	}
 
 	m_context = ImGui::CreateContext();
 
