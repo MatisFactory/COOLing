@@ -115,8 +115,8 @@ void CameraDrawer::setupViewProjection()
 {
 	GLint viewLoc = glGetUniformLocation(m_shader.ID, "view");
 	GLint projLoc = glGetUniformLocation(m_shader.ID, "projection");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::mainViewMatrix()));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::mainProjectionMatrix()));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::currentViewMatrix()));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::currentProjectionMatrix()));
 }
 
 void CameraDrawer::initOpenGlObjects()

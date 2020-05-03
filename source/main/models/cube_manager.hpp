@@ -21,9 +21,14 @@ public:
 
 	void init(uint32_t count = COUNT_OF_CUBES);
 
+	bool cullObjects() const;
+
 	void setCullingManager(Cooling::CullingManager* manager);
+	void setCullObjects(bool value);
 
 	void draw();
+
+	uint32_t countDrawedCube() const;
 private:
 	void setupViewProjection();
 private:
@@ -32,5 +37,8 @@ private:
 	std::vector<Cooling::Object> m_objects;
 	GLint m_transformLocation;
 
-	Cooling::CullingManager* m_cullingManager;
+	bool m_cullObjects = false;
+	Cooling::CullingManager* m_cullingManager = nullptr;
+
+	uint32_t m_countDrawedCube = 0;
 };

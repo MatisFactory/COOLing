@@ -15,30 +15,33 @@ class CameraManager
 public:
 	CameraManager(Window& window, uint32_t count = 1);
 	
-	Camera* getMainCamera() const;
-	void setMainCamera(int index);
-	int getMainCameraIndex() const;
+	Camera* getCurrentCamera() const;
+	void setCurrentCamera(int index);
+	int getCurrentCameraIndex() const;
+	Camera* getFirstNotCurrentCamera() const;
 
 	int size() const;
 	CameraPack getCameraPack() const;
 
-	Camera* getFirstNotMainCamera() const;
+	bool rotateByYaw() const;
+	void setRotateByYaw(bool value);
 
 	void tick(float dt);
+
 	void insertCamera();
 
-	static glm::mat4 mainViewMatrix();
-	static glm::mat4 mainProjectionMatrix();
+	static glm::mat4 currentViewMatrix();
+	static glm::mat4 currentProjectionMatrix();
 private:
 	Window& m_window;
 	int m_currentCameraIndex;
 	CameraPack m_cameraPack;
 	
-	CameraPtr m_mainCamera;
+	CameraPtr m_currentCamera;
 	std::string m_name;
+
+	bool m_rotateByYaw = false;
 
 	static glm::mat4 s_viewMatrixMainCamera;
 	static glm::mat4 s_projectionMatrixMainCamera;
-
-	bool m_rotateByYaw = false;
 };

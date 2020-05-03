@@ -17,11 +17,19 @@ public:
 	void run();
 private:
 	void tick(float dt);
+	
+	void preUpdate();
+	void update();
+	void postUpdate();
+
+	void tickCameraManager(float dt);
+	void tickCullingManager(float dt);
+	
 	void draw();
 
 	void imguiNewFrame();
 	void addToDrawImGui();
-	void renderImGui();
+	void drawImGui();
 private:
 	Window m_window;
 	Clock m_clock;

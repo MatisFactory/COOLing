@@ -12,10 +12,11 @@
 
 namespace
 {
-	static bool isOpen = true;
-	static bool isCullingOptimizationForMain = true;
-	static bool isCullingOptimizationForNotMain = false;
+	static bool isCullingOptimizationActive = true;
+	static bool cullObjectsForCurrentCamera = true;
+	static bool cullObjectsForNotCurrentCamera = false;
 	static bool rotateNotMainCameraByYaw = false;
+	static bool visualizeNotMainCamera = false;
 }
 
 Application::Application()
@@ -23,6 +24,8 @@ Application::Application()
 {
 	m_cubeManager.setCullingManager(&m_cullingManager);
 	m_cubeManager.init();
+
+	m_cubeManager.setCullObjects(isCullingOptimizationActive);
 }
 
 void Application::run()
@@ -31,43 +34,62 @@ void Application::run()
 
 	while (!m_window.windowShouldClose())
 	{
-		glfwPollEvents();
-
-		imguiNewFrame();
-
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		m_clock.update();
-		tick(m_clock.getDeltaTime());
-
-		draw();
-		addToDrawImGui();
-		renderImGui();
-
-		glfwSwapBuffers(m_window.getGLFWwindow());
+		preUpdate();
+		update();
+		postUpdate();
 	}
+}
+
+void Application::preUpdate()
+{
+	glfwPollEvents();
+
+	imguiNewFrame();
+
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Application::update()
+{
+	m_clock.update();
+	tick(m_clock.getDeltaTime());
+}
+
+void Application::postUpdate()
+{
+	draw();
+	addToDrawImGui();
+	drawImGui();
+
+	glfwSwapBuffers(m_window.getGLFWwindow());
 }
 
 void Application::tick(float dt)
 {
+	tickCameraManager(dt);
+	tickCullingManager(dt);
+}
+
+void Application::tickCameraManager(float dt)
+{
 	m_cameraManager.tick(dt);
 
-	Camera* notMainCamera = m_cameraManager.getFirstNotMainCamera();
+	Camera* notMainCamera = m_cameraManager.getFirstNotCurrentCamera();
 	m_cameraDrawer.setCameraToDraw(notMainCamera);
+}
 
-	if(isCullingOptimizationForMain)
-	{
-		m_cullingManager.setViewProjectionMatrix(CameraManager::mainProjectionMatrix() * CameraManager::mainViewMatrix());
-	}
-	else if (isCullingOptimizationForNotMain && notMainCamera)
-	{
-		m_cullingManager.setViewProjectionMatrix(notMainCamera->getProjection() * notMainCamera->getView());
-	}
+void Application::tickCullingManager(float dt)
+{
+	Camera* firstNotCurrentCamera = m_cameraManager.getFirstNotCurrentCamera();
 
-	if (rotateNotMainCameraByYaw)
+	if (cullObjectsForCurrentCamera)
 	{
-		notMainCamera->rotateByYaw(dt * notMainCamera->cameraSpeed()/2.f);
+		m_cullingManager.setViewProjectionMatrix(CameraManager::currentProjectionMatrix() * CameraManager::currentViewMatrix());
+	}
+	else if (cullObjectsForNotCurrentCamera && firstNotCurrentCamera)
+	{
+		m_cullingManager.setViewProjectionMatrix(firstNotCurrentCamera->getProjection() * firstNotCurrentCamera->getView());
 	}
 
 	m_cullingManager.update();
@@ -75,9 +97,13 @@ void Application::tick(float dt)
 
 void Application::draw()
 {
-	m_cameraDrawer.draw();
+	if (visualizeNotMainCamera)
+	{
+		m_cameraDrawer.draw();
+	}
 	m_cubeManager.draw();
 }
+
 
 void Application::imguiNewFrame()
 {
@@ -97,7 +123,7 @@ void Application::addToDrawImGui()
 		ImGuiIO& io = ImGui::GetIO();
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		int currentCameraIndex = m_cameraManager.getMainCameraIndex();
+		int currentCameraIndex = m_cameraManager.getCurrentCameraIndex();
 
 		auto cameraGetter = [](void* vec, int idx, const char** out_text) -> bool
 		{
@@ -113,7 +139,7 @@ void Application::addToDrawImGui()
 		CameraPack cameraPack = m_cameraManager.getCameraPack();
 		if (ImGui::Combo("Camera pack", &currentCameraIndex, cameraGetter, static_cast<void*>(&cameraPack), m_cameraManager.size()))
 		{
-			m_cameraManager.setMainCamera(currentCameraIndex);
+			m_cameraManager.setCurrentCamera(currentCameraIndex);
 		}
 
 		if (ImGui::Button("Add camera"))
@@ -121,26 +147,43 @@ void Application::addToDrawImGui()
 			m_cameraManager.insertCamera();
 		}
 
-		if (ImGui::Checkbox("Culling objects by main camera", &isCullingOptimizationForMain) ||
-			ImGui::Checkbox("Culling objects by not main camera", &isCullingOptimizationForNotMain))
+		isCullingOptimizationActive = m_cubeManager.cullObjects();
+		if (ImGui::Checkbox("Cull objects", &isCullingOptimizationActive))
 		{
-			if (isCullingOptimizationForMain || isCullingOptimizationForNotMain)
+			m_cubeManager.setCullObjects(isCullingOptimizationActive);
+			
+			if(isCullingOptimizationActive)
 			{
-				m_cubeManager.setCullingManager(&m_cullingManager);
-			}
-			else
-			{
-				m_cubeManager.setCullingManager(nullptr);
+				cullObjectsForCurrentCamera = true;
 			}
 		}
 
-		ImGui::Checkbox("Rotate not main camera", &rotateNotMainCameraByYaw);
+		if (isCullingOptimizationActive)
+		{
+			ImGui::Checkbox("Cull objects for current camera", &cullObjectsForCurrentCamera);
+			ImGui::Checkbox("Cull objects for first not current camera", &cullObjectsForNotCurrentCamera);
+		}
+
+		isCullingOptimizationActive = isCullingOptimizationActive & 
+			(cullObjectsForCurrentCamera || cullObjectsForNotCurrentCamera);
+		
+		m_cubeManager.setCullObjects(isCullingOptimizationActive);
+
+		ImGui::Checkbox("Visualize first not current camera", &visualizeNotMainCamera);
+
+		rotateNotMainCameraByYaw = m_cameraManager.rotateByYaw();
+		if (ImGui::Checkbox("Rotate not main camera", &rotateNotMainCameraByYaw))
+		{
+			m_cameraManager.setRotateByYaw(rotateNotMainCameraByYaw);
+		}
+
+		ImGui::LabelText("", "Count drawed cube: %d", m_cubeManager.countDrawedCube());
 
 		ImGui::End();
 	}
 }
 
-void Application::renderImGui()
+void Application::drawImGui()
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

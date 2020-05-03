@@ -15,13 +15,13 @@ public:
 	glm::mat4 getView() const;
 	glm::mat4 getProjection() const;
 
-	float cameraSpeed() const;
+	const char* getName() const;
+	float sensitivity() const;
 
 	void setFar(float value);
 
-	void rotateByYaw(float angle);
-
-	const char* getName() const;
+	void rotateYaw(float angle);
+	void rotatePitch(float angle);
 
 	void tick(float dt);
 private:
@@ -42,5 +42,5 @@ private:
 	float m_yaw;
 	float m_pitch;
 
-	float m_cameraSpeed;
+	float m_sensitivity;
 };

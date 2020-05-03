@@ -19,48 +19,36 @@ CameraManager::CameraManager(Window& window, uint32_t count)
 	, m_currentCameraIndex(0)
 {
 	m_cameraPack.reserve(count);
-	
 	for (int i = 0; i < count; i++)
 	{
 		m_cameraPack.push_back(std::make_shared<Camera>(CAMERA_PARAMS(i)));
 	}
 
-	m_mainCamera = m_cameraPack[m_currentCameraIndex];
-	m_mainCamera->setFar(MAIN_CAMERA_FAR);
+	setCurrentCamera(m_currentCameraIndex);
 }
 
-Camera* CameraManager::getMainCamera() const
+Camera* CameraManager::getCurrentCamera() const
 {
 	return m_cameraPack[m_currentCameraIndex].get();
 }
 
-int CameraManager::getMainCameraIndex() const
+int CameraManager::getCurrentCameraIndex() const
 {
 	return m_currentCameraIndex;
 }
 
-int CameraManager::size() const
-{
-	return m_cameraPack.size();
-}
-
-void CameraManager::setMainCamera(int index)
+void CameraManager::setCurrentCamera(int index)
 {
 	m_cameraPack[m_currentCameraIndex]->setFar(DEFAULT_FAR);
 	m_currentCameraIndex = index;
 	m_cameraPack[m_currentCameraIndex]->setFar(MAIN_CAMERA_FAR);
 }
 
-CameraPack CameraManager::getCameraPack() const
-{
-	return m_cameraPack;
-}
-
-Camera* CameraManager::getFirstNotMainCamera() const
+Camera* CameraManager::getFirstNotCurrentCamera() const
 {
 	for (const auto& camera : m_cameraPack)
 	{
-		if (camera.get() != getMainCamera())
+		if (camera.get() != getCurrentCamera())
 		{
 			return camera.get();
 		}
@@ -69,24 +57,53 @@ Camera* CameraManager::getFirstNotMainCamera() const
 	return nullptr;
 }
 
-glm::mat4 CameraManager::mainViewMatrix()
+int CameraManager::size() const
 {
-	return s_viewMatrixMainCamera;
+	return m_cameraPack.size();
 }
 
-glm::mat4 CameraManager::mainProjectionMatrix()
+CameraPack CameraManager::getCameraPack() const
 {
-	return s_projectionMatrixMainCamera;
+	return m_cameraPack;
+}
+
+bool CameraManager::rotateByYaw() const
+{
+	return m_rotateByYaw;
+}
+
+void CameraManager::setRotateByYaw(bool value)
+{
+	m_rotateByYaw = value;
 }
 
 void CameraManager::tick(float dt)
 {	
-	getMainCamera()->tick(dt);
-	s_viewMatrixMainCamera = getMainCamera()->getView();
-	s_projectionMatrixMainCamera = getMainCamera()->getProjection();
+	getCurrentCamera()->tick(dt);
+	s_viewMatrixMainCamera = getCurrentCamera()->getView();
+	s_projectionMatrixMainCamera = getCurrentCamera()->getProjection();
+
+	if (m_rotateByYaw)
+	{
+		if (Camera* notCurrentCamera = getFirstNotCurrentCamera())
+		{
+			notCurrentCamera->rotateYaw(dt* notCurrentCamera->sensitivity());
+		}
+	}
 }
 
 void CameraManager::insertCamera()
 {
 	m_cameraPack.push_back(std::make_shared<Camera>(CAMERA_PARAMS(m_cameraPack.size())));
 }
+
+glm::mat4 CameraManager::currentViewMatrix()
+{
+	return s_viewMatrixMainCamera;
+}
+
+glm::mat4 CameraManager::currentProjectionMatrix()
+{
+	return s_projectionMatrixMainCamera;
+}
+

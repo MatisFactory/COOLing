@@ -10,7 +10,7 @@
 
 namespace
 {
-	constexpr float WIDTH = 1000.f;
+	constexpr float WIDTH = 2000.f;
 	constexpr float HEIGHT = 200.f;
 }
 
@@ -42,34 +42,52 @@ void CubeManager::init(uint32_t count /*= COUNT_OF_CUBES*/)
 	}
 }
 
+bool CubeManager::cullObjects() const
+{
+	return m_cullObjects;
+}
+
 void CubeManager::setCullingManager(Cooling::CullingManager* manager)
 {
 	m_cullingManager = manager;
 }
 
+void CubeManager::setCullObjects(bool value)
+{
+	m_cullObjects = value;
+}
+
 void CubeManager::draw()
 {
+	m_countDrawedCube = 0;
 	m_shader.use();
 	setupViewProjection();
 
 	for (uint32_t i = 0; i < m_cubes.size(); i++)
 	{
-		if (m_cullingManager)
+		if (m_cullingManager && m_cullObjects)
 		{
 			if (!m_cullingManager->isVisible(i))
 			{
 				continue;
 			}
 		}
+
 		glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(m_cubes[i].worldTransform()));
 		m_cubes[i].draw();
+		m_countDrawedCube++;
 	}
+}
+
+uint32_t CubeManager::countDrawedCube() const
+{
+	return m_countDrawedCube;
 }
 
 void CubeManager::setupViewProjection()
 {
 	GLint viewLoc = glGetUniformLocation(m_shader.ID, "view");
 	GLint projLoc = glGetUniformLocation(m_shader.ID, "projection");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::mainViewMatrix()));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::mainProjectionMatrix()));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::currentViewMatrix()));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::currentProjectionMatrix()));
 }

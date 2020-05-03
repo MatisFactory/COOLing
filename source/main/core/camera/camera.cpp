@@ -5,32 +5,11 @@
 
 namespace
 {
-	constexpr float CAMERA_SPEED = 0.05f;
+	constexpr float CAMERA_SENSITIVITY = 0.05f;
 	constexpr float DELTA = 0.05f;
 	constexpr glm::vec3 DEFAULT_POSITION = glm::vec3(5.f, 0.f, 0.f);
 	constexpr glm::vec3 DEFAULT_TARGET = glm::vec3(0.f,0.f,0.f);
 	constexpr glm::vec3 DEFAULT_UP = glm::vec3(0.f, 1.f, 0.f);
-
-	int sign(float value)
-	{
-		return value > 0 ? 1 : -1;
-	}
-
-	float normalizeDegree(float degree)
-	{
-		float n = abs(degree/360.f);
-		if (n > 1.f)
-		{
-			degree = sign(degree) * (abs(degree) - static_cast<int>(n) * abs(360.f));
-		}
-
-		if (degree < 0.f)
-		{
-			return degree + 360.f;
-		}
-
-		return degree;
-	}
 } // namespace
 
 Camera::Camera(Window& window, float fov, float near, float far, std::string name)
@@ -43,7 +22,7 @@ Camera::Camera(Window& window, float fov, float near, float far, std::string nam
 	, m_name(name)
 	, m_yaw(0.f)
 	, m_pitch(90.f)
-	, m_cameraSpeed(CAMERA_SPEED)
+	, m_sensitivity(CAMERA_SENSITIVITY)
 {
 }
 
@@ -57,9 +36,14 @@ glm::mat4 Camera::getProjection() const
 	return glm::perspective(m_fov, getRatio(), m_near, m_far);
 }
 
-float Camera::cameraSpeed() const
+const char* Camera::getName() const
 {
-	return m_cameraSpeed;
+	return m_name.c_str();
+}
+
+float Camera::sensitivity() const
+{
+	return m_sensitivity;
 }
 
 void Camera::setFar(float value)
@@ -67,9 +51,14 @@ void Camera::setFar(float value)
 	m_far = value;
 }
 
-void Camera::rotateByYaw(float angle)
+void Camera::rotateYaw(float angle)
 {
 	m_yaw += angle;
+}
+
+void Camera::rotatePitch(float angle)
+{
+	m_pitch += angle;
 }
 
 float Camera::getRatio() const
@@ -86,50 +75,45 @@ glm::vec3 Camera::getDirection() const
 	return direction;
 }
 
-const char* Camera::getName() const
-{
-	return m_name.c_str();
-}
-
 void Camera::tick(float dt)
 {
 	if (m_window.isKeyPressed(GLFW_KEY_W))
 	{
-		m_position += dt * CAMERA_SPEED * getDirection();
+		m_position += dt * CAMERA_SENSITIVITY * getDirection();
 	}
 	if (m_window.isKeyPressed(GLFW_KEY_S))
 	{
-		m_position -= dt * CAMERA_SPEED * getDirection();
+		m_position -= dt * CAMERA_SENSITIVITY * getDirection();
 	}
 	if (m_window.isKeyPressed(GLFW_KEY_A))
 	{
-		m_position -= dt * CAMERA_SPEED * glm::cross(getDirection(), m_up);
+		m_position -= dt * CAMERA_SENSITIVITY * glm::cross(getDirection(), m_up);
 	}
 	if (m_window.isKeyPressed(GLFW_KEY_D))
 	{
-		m_position += dt * CAMERA_SPEED * glm::cross(getDirection(), m_up);
+		m_position += dt * CAMERA_SENSITIVITY * glm::cross(getDirection(), m_up);
 	}
 
 	if (m_window.isKeyPressed(GLFW_KEY_LEFT))
 	{
-		m_yaw -= CAMERA_SPEED * dt;
+		m_yaw -= CAMERA_SENSITIVITY * dt;
 	}
 
 	if (m_window.isKeyPressed(GLFW_KEY_RIGHT))
 	{
-		m_yaw += CAMERA_SPEED * dt;
+		m_yaw += CAMERA_SENSITIVITY * dt;
 	}
 
 	if (m_window.isKeyPressed(GLFW_KEY_UP))
 	{
-		m_pitch -= CAMERA_SPEED * dt;
+		m_pitch -= CAMERA_SENSITIVITY * dt;
 	}
 
 	if (m_window.isKeyPressed(GLFW_KEY_DOWN))
 	{
-		m_pitch += CAMERA_SPEED * dt;
+		m_pitch += CAMERA_SENSITIVITY * dt;
 	}
 
-	m_pitch = normalizeDegree(m_pitch);
-	m_yaw = normalizeDegree(m_yaw);
+	m_pitch = m_pitch;
+	m_yaw = m_yaw;
 }
