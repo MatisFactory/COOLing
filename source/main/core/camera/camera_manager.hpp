@@ -18,6 +18,7 @@ public:
 	Camera* getMainCamera() const;
 	void setMainCamera(int index);
 	int getMainCameraIndex() const;
+
 	int size() const;
 	CameraPack getCameraPack() const;
 
@@ -38,4 +39,6 @@ private:
 
 	static glm::mat4 s_viewMatrixMainCamera;
 	static glm::mat4 s_projectionMatrixMainCamera;
+
+	bool m_rotateByYaw = false;
 };

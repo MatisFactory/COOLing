@@ -43,6 +43,7 @@ Camera::Camera(Window& window, float fov, float near, float far, std::string nam
 	, m_name(name)
 	, m_yaw(0.f)
 	, m_pitch(90.f)
+	, m_cameraSpeed(CAMERA_SPEED)
 {
 }
 
@@ -56,9 +57,19 @@ glm::mat4 Camera::getProjection() const
 	return glm::perspective(m_fov, getRatio(), m_near, m_far);
 }
 
+float Camera::cameraSpeed() const
+{
+	return m_cameraSpeed;
+}
+
 void Camera::setFar(float value)
 {
 	m_far = value;
+}
+
+void Camera::rotateByYaw(float angle)
+{
+	m_yaw += angle;
 }
 
 float Camera::getRatio() const

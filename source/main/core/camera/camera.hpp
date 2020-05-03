@@ -15,7 +15,11 @@ public:
 	glm::mat4 getView() const;
 	glm::mat4 getProjection() const;
 
+	float cameraSpeed() const;
+
 	void setFar(float value);
+
+	void rotateByYaw(float angle);
 
 	const char* getName() const;
 
@@ -37,4 +41,6 @@ private:
 	// in degree
 	float m_yaw;
 	float m_pitch;
+
+	float m_cameraSpeed;
 };

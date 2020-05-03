@@ -15,6 +15,7 @@ namespace
 	static bool isOpen = true;
 	static bool isCullingOptimizationForMain = true;
 	static bool isCullingOptimizationForNotMain = false;
+	static bool rotateNotMainCameraByYaw = false;
 }
 
 Application::Application()
@@ -62,6 +63,11 @@ void Application::tick(float dt)
 	else if (isCullingOptimizationForNotMain && notMainCamera)
 	{
 		m_cullingManager.setViewProjectionMatrix(notMainCamera->getProjection() * notMainCamera->getView());
+	}
+
+	if (rotateNotMainCameraByYaw)
+	{
+		notMainCamera->rotateByYaw(dt * notMainCamera->cameraSpeed()/2.f);
 	}
 
 	m_cullingManager.update();
@@ -127,6 +133,8 @@ void Application::addToDrawImGui()
 				m_cubeManager.setCullingManager(nullptr);
 			}
 		}
+
+		ImGui::Checkbox("Rotate not main camera", &rotateNotMainCameraByYaw);
 
 		ImGui::End();
 	}

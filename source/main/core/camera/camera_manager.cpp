@@ -2,14 +2,14 @@
 
 #include <cassert>
 
-#define CAMERA_PARAMS(id) m_window, 60.f, 0.1f, 1000.f, "Camera " + std::to_string(id + 1)
-
 namespace
 {
 	static const std::string CAMERA_NAME;
-	constexpr float DEFAULT_FAR = 1000.f;
+	constexpr float DEFAULT_FAR = 200.f;
 	constexpr float MAIN_CAMERA_FAR = DEFAULT_FAR * 5;
 }
+
+#define CAMERA_PARAMS(id) m_window, 60.f, 0.1f, DEFAULT_FAR, "Camera " + std::to_string(id + 1)
 
 glm::mat4 CameraManager::s_viewMatrixMainCamera;
 glm::mat4 CameraManager::s_projectionMatrixMainCamera;
