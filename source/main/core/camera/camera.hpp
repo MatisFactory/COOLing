@@ -15,7 +15,7 @@ public:
 	glm::mat4 getView() const;
 	glm::mat4 getProjection() const;
 
-	void setFov(float value);
+	void setFar(float value);
 
 	const char* getName() const;
 

@@ -7,8 +7,8 @@
 namespace
 {
 	static const std::string CAMERA_NAME;
-	constexpr float DEFAULT_FOV = 1000.f;
-	constexpr float MAIN_CAMERA_FOV = DEFAULT_FOV * 5;
+	constexpr float DEFAULT_FAR = 1000.f;
+	constexpr float MAIN_CAMERA_FAR = DEFAULT_FAR * 5;
 }
 
 glm::mat4 CameraManager::s_viewMatrixMainCamera;
@@ -26,7 +26,7 @@ CameraManager::CameraManager(Window& window, uint32_t count)
 	}
 
 	m_mainCamera = m_cameraPack[m_currentCameraIndex];
-
+	m_mainCamera->setFar(MAIN_CAMERA_FAR);
 }
 
 Camera* CameraManager::getMainCamera() const
@@ -46,9 +46,9 @@ int CameraManager::size() const
 
 void CameraManager::setMainCamera(int index)
 {
-	m_cameraPack[m_currentCameraIndex]->setFov(DEFAULT_FOV);
+	m_cameraPack[m_currentCameraIndex]->setFar(DEFAULT_FAR);
 	m_currentCameraIndex = index;
-	m_cameraPack[m_currentCameraIndex]->setFov(MAIN_CAMERA_FOV);
+	m_cameraPack[m_currentCameraIndex]->setFar(MAIN_CAMERA_FAR);
 }
 
 CameraPack CameraManager::getCameraPack() const

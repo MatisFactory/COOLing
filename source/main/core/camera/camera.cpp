@@ -56,9 +56,9 @@ glm::mat4 Camera::getProjection() const
 	return glm::perspective(m_fov, getRatio(), m_near, m_far);
 }
 
-void Camera::setFov(float value)
+void Camera::setFar(float value)
 {
-	m_fov = value;
+	m_far = value;
 }
 
 float Camera::getRatio() const

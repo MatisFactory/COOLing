@@ -60,7 +60,7 @@ void CameraDrawer::draw()
 	constructModel();
 	initOpenGlObjects();
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_BLEND);
 	glDepthMask(GL_FALSE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -71,7 +71,7 @@ void CameraDrawer::draw()
 
 	glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void CameraDrawer::constructModel()
