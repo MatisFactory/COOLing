@@ -18,6 +18,7 @@ set(FILES
 	 core/clock/clock.hpp
 	 core/drawers/camera_drawer.hpp
 	 core/drawers/camera_drawer.cpp
+	 core/settings/scene_settings.hpp
 	 core/settings/window_settings.hpp
 	 core/shader/shader.hpp
 	 core/signal/signal.hpp

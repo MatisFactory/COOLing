@@ -1,5 +1,7 @@
 #include <cooling/culling_manager.hpp>
 #include <cooling/utils/visibility_tests.hpp>
+#include <cooling/algorithms/basic_culling_algorithm.hpp>
+#include <cooling/algorithms/regular_space_partitioning.hpp>
 
 namespace Cooling
 {
@@ -7,22 +9,26 @@ CullingManager::CullingManager()
 {
 }
 
-Object CullingManager::registerObject(const AABB& aabb)
+void CullingManager::setSceneAABB(const AABB& sceneAABB)
 {
-	m_objects.emplace_back(aabb);
-	m_isVisibleObject.push_back(false);
+	m_sceneAABB = sceneAABB;
+}
 
-	return m_objects.back();
+UniqueIndex CullingManager::registerObject(const AABB& aabb)
+{
+	m_objects.push_back(std::make_shared<Object>(aabb));
+
+	return m_objects.back()->getID();
 }
 
 bool CullingManager::isVisible(UniqueIndex index) const
 {
-	return m_isVisibleObject[index];
+	return m_objects[index]->isVisible();
 }
 
-bool CullingManager::isVisible(Object object) const
+Objects& CullingManager::objects()
 {
-	return isVisible(object.getID());
+	return m_objects;
 }
 
 void CullingManager::update()
@@ -31,12 +37,9 @@ void CullingManager::update()
 
 	m_frustumView.updateFrustumView();
 
-	for (auto& object : m_objects)
+	if (m_algorithm)
 	{
-		if (isAABBVisible(m_frustumView.getFrustumPlanes(), object.getAABB()))
-		{
-			m_isVisibleObject[object.getID()] = true;
-		}
+		m_algorithm->cullObjects(m_frustumView.getFrustumPlanes());
 	}
 }
 
@@ -47,10 +50,33 @@ void CullingManager::setViewProjectionMatrix(const glm::mat4& viewProjection)
 
 void CullingManager::cleanupObjectsInfo()
 {
-	for (auto& isVisible : m_isVisibleObject)
+	for (auto& object : m_objects)
 	{
-		isVisible = false;
+		object->setVisible(false);
 	}
+}
+
+void CullingManager::setAlgorithm(uint32_t algorithm)
+{
+	m_algorithmFilter = algorithm;
+
+	if (m_algorithmFilter & None)
+	{
+		m_algorithm = nullptr;
+		return;
+	}
+
+	if (m_algorithmFilter & Basic)
+	{
+		m_algorithm = std::make_unique<BasicCullingAlgorithm>();
+	}
+
+	if (m_algorithmFilter & AlRegularSpacePartitioning)
+	{
+		m_algorithm = std::make_unique<RegularSpacePartitioning>();
+	}
+
+	m_algorithm->init(m_objects, m_sceneAABB);
 }
 
 } // namespace Cooling

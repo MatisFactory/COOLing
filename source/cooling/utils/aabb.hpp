@@ -10,8 +10,13 @@ namespace Cooling
 {
 struct COOLING_DLL AABB
 {
-     glm::vec3 min;
-     glm::vec3 max;
+	AABB() = default;
+	AABB(const glm::vec3& min, const glm::vec3& max);
+
+	bool isIntersect(AABB& aabb);
+
+	glm::vec3 min;
+	glm::vec3 max;
 };
 
 COOLING_DLL AABB createAABBByVertex(const std::vector<glm::vec3>& vertecies);

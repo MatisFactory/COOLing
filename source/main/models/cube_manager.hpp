@@ -11,7 +11,7 @@
 
 namespace
 {
-	constexpr size_t COUNT_OF_CUBES = 40000;
+	constexpr size_t COUNT_OF_CUBES = 10000;
 }
 
 class CubeManager
@@ -34,7 +34,7 @@ private:
 private:
 	Shader m_shader;
 	std::vector<Cube> m_cubes;
-	std::vector<Cooling::Object> m_objects;
+	std::vector<Cooling::UniqueIndex> m_cullingIndexes;
 	GLint m_transformLocation;
 
 	bool m_cullObjects = false;

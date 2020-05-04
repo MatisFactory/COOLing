@@ -5,6 +5,8 @@
 
 #include <glm/glm.hpp>
 
+#include <vector>
+#include <memory>
 #include <stdint.h>
 
 namespace Cooling
@@ -19,8 +21,15 @@ public:
 	Object(const AABB& aabb);
 	AABB getAABB() const;
 	UniqueIndex getID() const;
+
+	bool isVisible() const;
+	void setVisible(bool value);
 private:
-	UniqueIndex m_index;
+	UniqueIndex m_index = 0;
 	AABB m_aabb;
+	bool m_isVisible = false;
 };
+
+using ObjectPtr = std::shared_ptr<Object>;
+using Objects = std::vector<ObjectPtr>;
 } // namespace Cooling

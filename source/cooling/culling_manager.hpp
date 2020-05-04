@@ -4,30 +4,46 @@
 
 #include <cooling/object.hpp>
 #include <cooling/frustum_view.hpp>
+#include <cooling/algorithms/algorithm.hpp>
 
 #include <glm/glm.hpp>
 
-#include <vector>
+#include <memory>
 
 namespace Cooling
 {
+enum AlgoritmFilter : uint32_t
+{
+	None = 1 << 0,
+	Basic = 1 << 1,
+	AlRegularSpacePartitioning = 1 << 3
+};
+
 class COOLING_DLL CullingManager
 {
 public:
 	CullingManager();
+	
+	void setSceneAABB(const AABB& sceneAABB);
 
-	[[nodiscard]] Object registerObject(const AABB& aabb);
+	[[nodiscard]] UniqueIndex registerObject(const AABB& aabb);
 	void setViewProjectionMatrix(const glm::mat4& viewProjection);
 	bool isVisible(UniqueIndex index) const;
-	bool isVisible(Object object) const;
+
+	Objects& objects();
 
 	void update();
 
 	void cleanupObjectsInfo();
-private:
-	std::vector<bool> m_isVisibleObject;
-	std::vector<Object> m_objects;
 
+	void setAlgorithm(uint32_t algorithm);
+private:
+	Objects m_objects;
 	FrustumView m_frustumView;
+
+	AABB m_sceneAABB;
+
+	std::unique_ptr<Algorithm> m_algorithm;
+	uint32_t m_algorithmFilter;
 };
 } // namespace Cooling

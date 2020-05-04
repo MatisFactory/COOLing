@@ -4,6 +4,20 @@
 
 namespace Cooling
 {
+
+AABB::AABB(const glm::vec3& min, const glm::vec3& max)
+	: min(min)
+	, max(max)
+{
+}
+
+bool AABB::isIntersect(AABB& aabb)
+{
+	return aabb.min.x <= max.x && min.x <= aabb.max.x &&
+		aabb.min.y <= max.y && min.y <= aabb.max.y &&
+		aabb.min.z <= max.z && min.z <= aabb.max.z;
+}
+
 AABB createAABBByVertex(const std::vector<glm::vec3>& vertecies)
 {
      if(vertecies.empty())

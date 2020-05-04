@@ -1,4 +1,7 @@
 #include <main/core/application.hpp>
+#include <main/core/settings/scene_settings.hpp>
+
+#include <cooling/utils/aabb.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,6 +18,8 @@ namespace
 	static bool isCullingOptimizationActive = true;
 	static bool cullObjectsForCurrentCamera = true;
 	static bool cullObjectsForNotCurrentCamera = false;
+	static bool basicCullingAlgorithm = false;
+	static bool regularSpacePartitioningAlgorithm = false;
 	static bool rotateNotMainCameraByYaw = false;
 	static bool visualizeNotMainCamera = false;
 }
@@ -22,6 +27,12 @@ namespace
 Application::Application()
 	: m_cameraManager(m_window)
 {
+	Cooling::AABB aabb;
+	m_cullingManager.setSceneAABB(Cooling::AABB(glm::vec3(-SCENE_WIDTH, -SCENE_HEIGHT, -SCENE_WIDTH),
+												glm::vec3(SCENE_WIDTH, SCENE_HEIGHT, SCENE_WIDTH)));
+
+	//m_cullingManager.setAlgorithm(Cooling::AlRegularSpacePartitioning);
+
 	m_cubeManager.setCullingManager(&m_cullingManager);
 	m_cubeManager.init();
 
@@ -168,6 +179,15 @@ void Application::addToDrawImGui()
 			(cullObjectsForCurrentCamera || cullObjectsForNotCurrentCamera);
 		
 		m_cubeManager.setCullObjects(isCullingOptimizationActive);
+
+		if (ImGui::Checkbox("Basic culling algorithm", &basicCullingAlgorithm))
+		{
+			m_cullingManager.setAlgorithm(basicCullingAlgorithm ? Cooling::Basic : Cooling::None);
+		}
+		if (ImGui::Checkbox("Regular space partitioning algorithm", &regularSpacePartitioningAlgorithm))
+		{
+			m_cullingManager.setAlgorithm(regularSpacePartitioningAlgorithm ? Cooling::AlRegularSpacePartitioning : Cooling::None);
+		}
 
 		ImGui::Checkbox("Visualize first not current camera", &visualizeNotMainCamera);
 
