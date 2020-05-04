@@ -36,6 +36,7 @@ public:
 
 	void cleanupObjectsInfo();
 
+	bool hasAlgorithm() const;
 	void setAlgorithm(uint32_t algorithm);
 private:
 	Objects m_objects;

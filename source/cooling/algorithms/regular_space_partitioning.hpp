@@ -25,7 +25,6 @@ public:
 	void init(const Objects& objects, const AABB& sceneAABB) override;
 	void cullObjects(const FrustumPlanes& planes) override;
 private:
-	AABB m_sceneAABB;
 	uint32_t m_countSegmentOnAxis = 0;
 	std::vector<Node> m_nodes;
 };

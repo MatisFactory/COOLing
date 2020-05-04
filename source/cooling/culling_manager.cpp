@@ -56,6 +56,11 @@ void CullingManager::cleanupObjectsInfo()
 	}
 }
 
+bool CullingManager::hasAlgorithm() const
+{
+	return m_algorithm.get() != nullptr;
+}
+
 void CullingManager::setAlgorithm(uint32_t algorithm)
 {
 	m_algorithmFilter = algorithm;

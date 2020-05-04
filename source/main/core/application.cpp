@@ -15,8 +15,8 @@
 
 namespace
 {
-	static bool isCullingOptimizationActive = true;
-	static bool cullObjectsForCurrentCamera = true;
+	static bool isCullingOptimizationActive = false;
+	static bool cullObjectsForCurrentCamera = false;
 	static bool cullObjectsForNotCurrentCamera = false;
 	static bool basicCullingAlgorithm = false;
 	static bool regularSpacePartitioningAlgorithm = false;
@@ -186,6 +186,7 @@ void Application::addToDrawImGui()
 		}
 		if (ImGui::Checkbox("Regular space partitioning algorithm", &regularSpacePartitioningAlgorithm))
 		{
+			
 			m_cullingManager.setAlgorithm(regularSpacePartitioningAlgorithm ? Cooling::AlRegularSpacePartitioning : Cooling::None);
 		}
 

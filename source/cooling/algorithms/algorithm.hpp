@@ -15,7 +15,7 @@ public:
 	virtual void cullObjects(const FrustumPlanes& planes) = 0;
 
 	void setSceneAABB(const AABB& aabb) { m_sceneAABB = aabb; }
-private:
+protected:
 	AABB m_sceneAABB;
 };
 } // namespace Cooling

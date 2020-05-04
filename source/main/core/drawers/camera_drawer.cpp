@@ -44,6 +44,7 @@ CameraDrawer::~CameraDrawer()
 void CameraDrawer::setCameraToDraw(Camera* camera)
 {
 	m_camera = camera;
+	initOpenGlObjects();
 }
 
 
@@ -58,7 +59,6 @@ void CameraDrawer::draw()
 
 	setupViewProjection();
 	constructModel();
-	initOpenGlObjects();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_BLEND);
