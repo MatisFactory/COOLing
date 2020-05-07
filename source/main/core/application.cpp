@@ -19,6 +19,7 @@ namespace
 	static bool cullObjectsForCurrentCamera = false;
 	static bool cullObjectsForNotCurrentCamera = false;
 	static bool basicCullingAlgorithm = false;
+	static bool octreeAlgorithm = false;
 	static bool regularSpacePartitioningAlgorithm = false;
 	static bool rotateNotMainCameraByYaw = false;
 	static bool visualizeNotMainCamera = false;
@@ -184,9 +185,12 @@ void Application::addToDrawImGui()
 		{
 			m_cullingManager.setAlgorithm(basicCullingAlgorithm ? Cooling::Basic : Cooling::None);
 		}
+		if (ImGui::Checkbox("Octree algorithm", &octreeAlgorithm))
+		{
+			m_cullingManager.setAlgorithm(octreeAlgorithm ? Cooling::OctreeCulling : Cooling::None);
+		}
 		if (ImGui::Checkbox("Regular space partitioning algorithm", &regularSpacePartitioningAlgorithm))
 		{
-			
 			m_cullingManager.setAlgorithm(regularSpacePartitioningAlgorithm ? Cooling::AlRegularSpacePartitioning : Cooling::None);
 		}
 

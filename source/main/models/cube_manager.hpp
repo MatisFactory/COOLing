@@ -11,7 +11,7 @@
 
 namespace
 {
-	constexpr size_t COUNT_OF_CUBES = 10000;
+	constexpr size_t COUNT_OF_CUBES = 150000;
 }
 
 class CubeManager

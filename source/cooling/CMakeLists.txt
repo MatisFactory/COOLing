@@ -8,9 +8,13 @@ set(FILES
      algorithms/algorithm.hpp
      algorithms/basic_culling_algorithm.cpp
      algorithms/basic_culling_algorithm.hpp
+     algorithms/octree.cpp
+     algorithms/octree.hpp
      algorithms/regular_space_partitioning.cpp
      algorithms/regular_space_partitioning.hpp
      export/cooling_dll.hpp
+     profiler/profiler.cpp
+     profiler/profiler.hpp
      utils/aabb.hpp
      utils/aabb.cpp
      utils/visibility_tests.cpp

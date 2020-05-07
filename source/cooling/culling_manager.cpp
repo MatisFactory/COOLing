@@ -1,6 +1,7 @@
 #include <cooling/culling_manager.hpp>
 #include <cooling/utils/visibility_tests.hpp>
 #include <cooling/algorithms/basic_culling_algorithm.hpp>
+#include <cooling/algorithms/octree.hpp>
 #include <cooling/algorithms/regular_space_partitioning.hpp>
 
 namespace Cooling
@@ -70,15 +71,17 @@ void CullingManager::setAlgorithm(uint32_t algorithm)
 		m_algorithm = nullptr;
 		return;
 	}
-
-	if (m_algorithmFilter & Basic)
+	else if (m_algorithmFilter & Basic)
 	{
 		m_algorithm = std::make_unique<BasicCullingAlgorithm>();
 	}
-
-	if (m_algorithmFilter & AlRegularSpacePartitioning)
+	else if (m_algorithmFilter & AlRegularSpacePartitioning)
 	{
 		m_algorithm = std::make_unique<RegularSpacePartitioning>();
+	}
+	else if (m_algorithmFilter & OctreeCulling)
+	{
+		m_algorithm = std::make_unique<Octree>();
 	}
 
 	m_algorithm->init(m_objects, m_sceneAABB);

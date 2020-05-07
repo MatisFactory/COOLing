@@ -16,7 +16,8 @@ enum AlgoritmFilter : uint32_t
 {
 	None = 1 << 0,
 	Basic = 1 << 1,
-	AlRegularSpacePartitioning = 1 << 3
+	AlRegularSpacePartitioning = 1 << 2,
+	OctreeCulling = 1 << 3,
 };
 
 class COOLING_DLL CullingManager

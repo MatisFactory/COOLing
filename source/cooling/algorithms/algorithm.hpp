@@ -8,6 +8,15 @@
 
 namespace Cooling
 {
+struct COOLING_DLL Node
+{
+	Node() = default;
+	Node(const Objects& objects, const AABB& aabb) : objects(objects), aabb(aabb) {};
+
+	Objects objects;
+	AABB aabb;
+};
+
 class COOLING_DLL Algorithm
 {
 public:

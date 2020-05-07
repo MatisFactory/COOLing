@@ -4,11 +4,14 @@
 
 #include <cooling/frustum_view.hpp>
 #include <cooling/utils/aabb.hpp>
+#include <cooling/object.hpp>
 
 #include <glm/glm.hpp>
 
 namespace Cooling
 {
+COOLING_DLL Objects intersectedObject(const AABB& aabb, const Objects& objects);
+
 COOLING_DLL bool isDistancePositive(const glm::vec3& point, const Plane& plane);
 COOLING_DLL float distance(const glm::vec3& point, const Plane& plane);
 COOLING_DLL glm::vec3 getPositiveVertex(const glm::vec3& normal, const AABB& aabb);

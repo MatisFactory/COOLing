@@ -1,5 +1,6 @@
 #include <cooling/algorithms/regular_space_partitioning.hpp>
 #include <cooling/utils/visibility_tests.hpp>
+#include <cooling/profiler/profiler.hpp>
 
 #include <glm/glm.hpp>
 
@@ -70,6 +71,8 @@ void RegularSpacePartitioning::init(const Objects& objects, const AABB& sceneAAB
 
 void RegularSpacePartitioning::cullObjects(const FrustumPlanes& planes)
 {
+	Profiler p("BasicCullingAlgorithm::cullObjects");
+
 	for (auto& node : m_nodes)
 	{
 		if (isAABBVisible(planes, node.aabb))

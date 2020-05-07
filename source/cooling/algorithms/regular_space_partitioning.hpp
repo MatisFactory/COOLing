@@ -11,12 +11,6 @@
 
 namespace Cooling
 {
-struct COOLING_DLL Node
-{
-	Objects objects;
-	AABB aabb;
-};
-
 class COOLING_DLL RegularSpacePartitioning : public Algorithm
 {
 public:

@@ -11,7 +11,7 @@ AABB::AABB(const glm::vec3& min, const glm::vec3& max)
 {
 }
 
-bool AABB::isIntersect(AABB& aabb)
+bool AABB::isIntersect(const AABB& aabb)
 {
 	return aabb.min.x <= max.x && min.x <= aabb.max.x &&
 		aabb.min.y <= max.y && min.y <= aabb.max.y &&

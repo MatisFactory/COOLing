@@ -13,7 +13,7 @@ struct COOLING_DLL AABB
 	AABB() = default;
 	AABB(const glm::vec3& min, const glm::vec3& max);
 
-	bool isIntersect(AABB& aabb);
+	bool isIntersect(const AABB& aabb);
 
 	glm::vec3 min;
 	glm::vec3 max;

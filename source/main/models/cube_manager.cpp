@@ -4,6 +4,7 @@
 
 #include <cooling/utils/visibility_tests.hpp>
 #include <cooling/utils/aabb.hpp>
+#include <cooling/profiler/profiler.hpp>
 
 #include <gl/glew.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -60,6 +61,8 @@ void CubeManager::setCullObjects(bool value)
 
 void CubeManager::draw()
 {
+	Cooling::Profiler p("Draw");
+
 	m_countDrawedCube = 0;
 	m_shader.use();
 	setupViewProjection();
