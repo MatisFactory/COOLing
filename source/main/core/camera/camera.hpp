@@ -16,7 +16,12 @@ public:
 	glm::mat4 getProjection() const;
 
 	const char* getName() const;
+
 	float sensitivity() const;
+	void setSensitivity(float value);
+
+	float rotationSpeed() const;
+	void setRotationSpeed(float value);
 
 	void setFar(float value);
 
@@ -43,4 +48,5 @@ private:
 	float m_pitch;
 
 	float m_sensitivity;
+	float m_rotationSpeed;
 };

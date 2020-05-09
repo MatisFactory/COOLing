@@ -7,7 +7,10 @@
 #include <main/models/cube_manager.hpp>
 #include <main/core/drawers/camera_drawer.hpp>
 
+
 #include <cooling/culling_manager.hpp>
+
+class ObjModelDrawer;
 
 class Application
 {
@@ -34,6 +37,7 @@ private:
 	Window m_window;
 	Clock m_clock;
 
+	ObjModelDrawer* m_objDrawer = nullptr;
 	CubeManager m_cubeManager;
 	Cooling::CullingManager m_cullingManager;
 

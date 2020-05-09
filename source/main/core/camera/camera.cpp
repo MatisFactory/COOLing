@@ -5,8 +5,8 @@
 
 namespace
 {
-	constexpr float CAMERA_SENSITIVITY = 0.05f;
-	constexpr float DELTA = 0.05f;
+	constexpr float CAMERA_SENSITIVITY = 0.01f;
+	constexpr float ROTATION_SPEED = 0.08f;
 	constexpr glm::vec3 DEFAULT_POSITION = glm::vec3(5.f, 0.f, 0.f);
 	constexpr glm::vec3 DEFAULT_TARGET = glm::vec3(0.f,0.f,0.f);
 	constexpr glm::vec3 DEFAULT_UP = glm::vec3(0.f, 1.f, 0.f);
@@ -23,6 +23,7 @@ Camera::Camera(Window& window, float fov, float near, float far, std::string nam
 	, m_yaw(0.f)
 	, m_pitch(90.f)
 	, m_sensitivity(CAMERA_SENSITIVITY)
+	, m_rotationSpeed(ROTATION_SPEED)
 {
 }
 
@@ -44,6 +45,21 @@ const char* Camera::getName() const
 float Camera::sensitivity() const
 {
 	return m_sensitivity;
+}
+
+void Camera::setSensitivity(float value)
+{
+	m_sensitivity = value;
+}
+
+float Camera::rotationSpeed() const
+{
+	return m_rotationSpeed;
+}
+
+void Camera::setRotationSpeed(float value)
+{
+	m_rotationSpeed = value;
 }
 
 void Camera::setFar(float value)
@@ -79,39 +95,39 @@ void Camera::tick(float dt)
 {
 	if (m_window.isKeyPressed(GLFW_KEY_W))
 	{
-		m_position += dt * CAMERA_SENSITIVITY * getDirection();
+		m_position += dt * m_sensitivity * getDirection();
 	}
 	if (m_window.isKeyPressed(GLFW_KEY_S))
 	{
-		m_position -= dt * CAMERA_SENSITIVITY * getDirection();
+		m_position -= dt * m_sensitivity * getDirection();
 	}
 	if (m_window.isKeyPressed(GLFW_KEY_A))
 	{
-		m_position -= dt * CAMERA_SENSITIVITY * glm::cross(getDirection(), m_up);
+		m_position -= dt * m_sensitivity * glm::cross(getDirection(), m_up);
 	}
 	if (m_window.isKeyPressed(GLFW_KEY_D))
 	{
-		m_position += dt * CAMERA_SENSITIVITY * glm::cross(getDirection(), m_up);
+		m_position += dt * m_sensitivity * glm::cross(getDirection(), m_up);
 	}
 
 	if (m_window.isKeyPressed(GLFW_KEY_LEFT))
 	{
-		m_yaw -= CAMERA_SENSITIVITY * dt;
+		m_yaw -= m_rotationSpeed * dt;
 	}
 
 	if (m_window.isKeyPressed(GLFW_KEY_RIGHT))
 	{
-		m_yaw += CAMERA_SENSITIVITY * dt;
+		m_yaw += m_rotationSpeed * dt;
 	}
 
 	if (m_window.isKeyPressed(GLFW_KEY_UP))
 	{
-		m_pitch -= CAMERA_SENSITIVITY * dt;
+		m_pitch -= m_rotationSpeed * dt;
 	}
 
 	if (m_window.isKeyPressed(GLFW_KEY_DOWN))
 	{
-		m_pitch += CAMERA_SENSITIVITY * dt;
+		m_pitch += m_rotationSpeed * dt;
 	}
 
 	m_pitch = m_pitch;

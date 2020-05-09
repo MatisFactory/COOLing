@@ -24,6 +24,7 @@ private:
 	void constructModel();
 	void setupViewProjection();
 	void initOpenGlObjects();
+	void deleteOpenGlObjects();
 private:
 	Shader m_shader;
 	Camera* m_camera;

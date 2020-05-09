@@ -16,8 +16,10 @@ set(FILES
 	 core/camera/camera_manager.hpp
 	 core/clock/clock.cpp
 	 core/clock/clock.hpp
-	 core/drawers/camera_drawer.hpp
 	 core/drawers/camera_drawer.cpp
+	 core/drawers/camera_drawer.hpp
+	 core/drawers/obj_model_drawer.cpp
+	 core/drawers/obj_model_drawer.hpp
 	 core/settings/scene_settings.hpp
 	 core/settings/window_settings.hpp
 	 core/shader/shader.hpp
@@ -26,6 +28,7 @@ set(FILES
 	 models/cube_manager.hpp
 	 models/cube.cpp
 	 models/cube.hpp
+	 third_party/OBJ_Loader.h
 	 )
 
 add_executable(main ${FILES})

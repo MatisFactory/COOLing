@@ -1,6 +1,8 @@
 #include <main/core/application.hpp>
 #include <main/core/settings/scene_settings.hpp>
 
+#include <main/core/drawers/obj_model_drawer.hpp>
+
 #include <cooling/utils/aabb.hpp>
 
 #include <glm/glm.hpp>
@@ -27,6 +29,7 @@ namespace
 
 Application::Application()
 	: m_cameraManager(m_window)
+	, m_objDrawer(new ObjModelDrawer("../../../obj_models/airplane.obj"))
 {
 	Cooling::AABB aabb;
 	m_cullingManager.setSceneAABB(Cooling::AABB(glm::vec3(-SCENE_WIDTH, -SCENE_HEIGHT, -SCENE_WIDTH),
@@ -113,6 +116,8 @@ void Application::draw()
 	{
 		m_cameraDrawer.draw();
 	}
+
+	m_objDrawer->draw();
 	m_cubeManager.draw();
 }
 
@@ -203,6 +208,29 @@ void Application::addToDrawImGui()
 		}
 
 		ImGui::LabelText("", "Count drawed cube: %d", m_cubeManager.countDrawedCube());
+
+		ImGui::End();
+	}
+
+	if (!ImGui::Begin("Camera", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::End();
+	}
+	else
+	{
+		ImGuiIO& io = ImGui::GetIO();
+
+		float currentSensitivity = m_cameraManager.getCurrentCamera()->sensitivity();
+		if (ImGui::SliderFloat("Sensitivity", &currentSensitivity, 0.0f, 1.0f))
+		{
+			m_cameraManager.getCurrentCamera()->setSensitivity(currentSensitivity);
+		}
+
+		float rotationSpeed = m_cameraManager.getCurrentCamera()->rotationSpeed();
+		if (ImGui::SliderFloat("Rotation speed", &rotationSpeed, 0.0f, 1.0f))
+		{
+			m_cameraManager.getCurrentCamera()->setRotationSpeed(rotationSpeed);
+		}
 
 		ImGui::End();
 	}

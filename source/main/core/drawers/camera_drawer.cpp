@@ -36,9 +36,6 @@ CameraDrawer::CameraDrawer(Camera* camera)
 
 CameraDrawer::~CameraDrawer()
 {
-	glDeleteVertexArrays(1, &m_VAO);
-	glDeleteBuffers(1, &m_VBO);
-	glDeleteBuffers(1, &m_IBO);
 }
 
 void CameraDrawer::setCameraToDraw(Camera* camera)
@@ -121,6 +118,8 @@ void CameraDrawer::setupViewProjection()
 
 void CameraDrawer::initOpenGlObjects()
 {
+	deleteOpenGlObjects();
+
 	glGenVertexArrays(1, &m_VAO);
 	glGenBuffers(1, &m_VBO);
 	glGenBuffers(1, &m_IBO);
@@ -138,4 +137,11 @@ void CameraDrawer::initOpenGlObjects()
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+}
+
+void CameraDrawer::deleteOpenGlObjects()
+{
+	glDeleteVertexArrays(1, &m_VAO);
+	glDeleteBuffers(1, &m_VBO);
+	glDeleteBuffers(1, &m_IBO);
 }
