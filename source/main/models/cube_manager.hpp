@@ -2,8 +2,7 @@
 
 #include <main/core/shader/shader.hpp>
 #include <main/models/cube.hpp>
-
-#include <cooling/culling_manager.hpp>
+#include <cooling/object.hpp>
 
 #include <glm/glm.hpp>
 
@@ -23,7 +22,6 @@ public:
 
 	bool cullObjects() const;
 
-	void setCullingManager(Cooling::CullingManager* manager);
 	void setCullObjects(bool value);
 
 	void draw();
@@ -38,7 +36,6 @@ private:
 	GLint m_transformLocation;
 
 	bool m_cullObjects = false;
-	Cooling::CullingManager* m_cullingManager = nullptr;
 
 	uint32_t m_countDrawedCube = 0;
 };

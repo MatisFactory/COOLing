@@ -40,11 +40,21 @@ void ObjModelDrawer::normalizeTransform()
 {
 	float max = 0;
 
-	for (const auto& value : m_vertices)
+	for (const auto& vertex : m_vertices)
 	{
-		if (abs(value) > max)
+		if (abs(vertex.x) > max)
 		{
-			max = abs(value);
+			max = abs(vertex.x);
+		}
+
+		if (abs(vertex.y) > max)
+		{
+			max = abs(vertex.y);
+		}
+
+		if (abs(vertex.z) > max)
+		{
+			max = abs(vertex.z);
 		}
 	}
 
@@ -59,9 +69,7 @@ void ObjModelDrawer::loadOpenGLObjects()
 
 	for (const auto& vertex : m_loader->LoadedVertices)
 	{
-		m_vertices.push_back(vertex.Position.X);
-		m_vertices.push_back(vertex.Position.Y);
-		m_vertices.push_back(vertex.Position.Z);
+		m_vertices.push_back(glm::vec3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z));
 	}
 
 	glGenVertexArrays(1, &m_VAO);
@@ -70,7 +78,7 @@ void ObjModelDrawer::loadOpenGLObjects()
 	glGenBuffers(1, &m_VBO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_vertices.size(), &m_vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * m_vertices.size(), &m_vertices[0], GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	glEnableVertexAttribArray(0);

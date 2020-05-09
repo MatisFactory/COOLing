@@ -8,6 +8,7 @@ set(FILES
      main.cpp
 	 core/application.cpp
 	 core/application.hpp
+	 core/culling_wrapper.hpp
 	 core/window.cpp
 	 core/window.hpp
 	 core/camera/camera.cpp

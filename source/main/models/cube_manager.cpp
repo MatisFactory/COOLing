@@ -1,6 +1,7 @@
 #include <main/models/cube_manager.hpp>
 #include <main/core/camera/camera_manager.hpp>
 #include <main/core/settings/scene_settings.hpp>
+#include <main/core/culling_wrapper.hpp>
 
 #include <cooling/utils/visibility_tests.hpp>
 #include <cooling/utils/aabb.hpp>
@@ -28,8 +29,6 @@ void CubeManager::init(uint32_t count /*= COUNT_OF_CUBES*/)
 
 	m_cubes.reserve(count);
 
-	assert(m_cullingManager);
-
 	for (size_t i = 0; i < count; i++)
 	{
 		glm::mat4 transform = glm::mat4(1.f);
@@ -40,18 +39,13 @@ void CubeManager::init(uint32_t count /*= COUNT_OF_CUBES*/)
 
 		Cooling::AABB aabb;
 		aabb = Cooling::createAABBByVertex(m_cubes.back().getVertices());
-		m_cullingIndexes.emplace_back(m_cullingManager->registerObject(aabb));
+		m_cullingIndexes.emplace_back(CullingWrapper::instance().cullingManager().registerObject(aabb));
 	}
 }
 
 bool CubeManager::cullObjects() const
 {
 	return m_cullObjects;
-}
-
-void CubeManager::setCullingManager(Cooling::CullingManager* manager)
-{
-	m_cullingManager = manager;
 }
 
 void CubeManager::setCullObjects(bool value)
@@ -69,9 +63,9 @@ void CubeManager::draw()
 
 	for (uint32_t i = 0; i < m_cubes.size(); i++)
 	{
-		if (m_cullingManager && m_cullObjects)
+		if (m_cullObjects)
 		{
-			if (!m_cullingManager->isVisible(i))
+			if (!CullingWrapper::instance().cullingManager().isVisible(i))
 			{
 				continue;
 			}

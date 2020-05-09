@@ -25,7 +25,7 @@ private:
 	void setupViewProjection();
 private:
 	std::string m_fileName;
-	std::vector<float> m_vertices;
+	std::vector<glm::vec3> m_vertices;
 	
 	Shader m_shader;
 	std::unique_ptr<objl::Loader> m_loader;

@@ -1,7 +1,6 @@
 #include <main/core/application.hpp>
 #include <main/core/settings/scene_settings.hpp>
-
-#include <main/core/drawers/obj_model_drawer.hpp>
+#include <main/core/culling_wrapper.hpp>
 
 #include <cooling/utils/aabb.hpp>
 
@@ -29,15 +28,11 @@ namespace
 
 Application::Application()
 	: m_cameraManager(m_window)
-	, m_objDrawer(new ObjModelDrawer("../../../obj_models/airplane.obj"))
+	, m_objDrawer("../../../obj_models/airplane.obj")
 {
-	Cooling::AABB aabb;
-	m_cullingManager.setSceneAABB(Cooling::AABB(glm::vec3(-SCENE_WIDTH, -SCENE_HEIGHT, -SCENE_WIDTH),
+	CullingWrapper::instance().cullingManager().setSceneAABB(Cooling::AABB(glm::vec3(-SCENE_WIDTH, -SCENE_HEIGHT, -SCENE_WIDTH),
 												glm::vec3(SCENE_WIDTH, SCENE_HEIGHT, SCENE_WIDTH)));
 
-	//m_cullingManager.setAlgorithm(Cooling::AlRegularSpacePartitioning);
-
-	m_cubeManager.setCullingManager(&m_cullingManager);
 	m_cubeManager.init();
 
 	m_cubeManager.setCullObjects(isCullingOptimizationActive);
@@ -97,17 +92,18 @@ void Application::tickCameraManager(float dt)
 void Application::tickCullingManager(float dt)
 {
 	Camera* firstNotCurrentCamera = m_cameraManager.getFirstNotCurrentCamera();
+	auto& cullingManager = CullingWrapper::instance().cullingManager();
 
 	if (cullObjectsForCurrentCamera)
 	{
-		m_cullingManager.setViewProjectionMatrix(CameraManager::currentProjectionMatrix() * CameraManager::currentViewMatrix());
+		cullingManager.setViewProjectionMatrix(CameraManager::currentProjectionMatrix() * CameraManager::currentViewMatrix());
 	}
 	else if (cullObjectsForNotCurrentCamera && firstNotCurrentCamera)
 	{
-		m_cullingManager.setViewProjectionMatrix(firstNotCurrentCamera->getProjection() * firstNotCurrentCamera->getView());
+		cullingManager.setViewProjectionMatrix(firstNotCurrentCamera->getProjection() * firstNotCurrentCamera->getView());
 	}
 
-	m_cullingManager.update();
+	cullingManager.update();
 }
 
 void Application::draw()
@@ -117,7 +113,7 @@ void Application::draw()
 		m_cameraDrawer.draw();
 	}
 
-	m_objDrawer->draw();
+	m_objDrawer.draw();
 	m_cubeManager.draw();
 }
 
@@ -137,6 +133,7 @@ void Application::addToDrawImGui()
 	}
 	else
 	{
+		auto& cullingManager = CullingWrapper::instance().cullingManager();
 		ImGuiIO& io = ImGui::GetIO();
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
@@ -188,15 +185,15 @@ void Application::addToDrawImGui()
 
 		if (ImGui::Checkbox("Basic culling algorithm", &basicCullingAlgorithm))
 		{
-			m_cullingManager.setAlgorithm(basicCullingAlgorithm ? Cooling::Basic : Cooling::None);
+			cullingManager.setAlgorithm(basicCullingAlgorithm ? Cooling::Basic : Cooling::None);
 		}
 		if (ImGui::Checkbox("Octree algorithm", &octreeAlgorithm))
 		{
-			m_cullingManager.setAlgorithm(octreeAlgorithm ? Cooling::OctreeCulling : Cooling::None);
+			cullingManager.setAlgorithm(octreeAlgorithm ? Cooling::OctreeCulling : Cooling::None);
 		}
 		if (ImGui::Checkbox("Regular space partitioning algorithm", &regularSpacePartitioningAlgorithm))
 		{
-			m_cullingManager.setAlgorithm(regularSpacePartitioningAlgorithm ? Cooling::AlRegularSpacePartitioning : Cooling::None);
+			cullingManager.setAlgorithm(regularSpacePartitioningAlgorithm ? Cooling::AlRegularSpacePartitioning : Cooling::None);
 		}
 
 		ImGui::Checkbox("Visualize first not current camera", &visualizeNotMainCamera);

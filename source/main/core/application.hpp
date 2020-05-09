@@ -6,9 +6,7 @@
 #include <main/core/shader/shader.hpp>
 #include <main/models/cube_manager.hpp>
 #include <main/core/drawers/camera_drawer.hpp>
-
-
-#include <cooling/culling_manager.hpp>
+#include <main/core/drawers/obj_model_drawer.hpp>
 
 class ObjModelDrawer;
 
@@ -37,9 +35,8 @@ private:
 	Window m_window;
 	Clock m_clock;
 
-	ObjModelDrawer* m_objDrawer = nullptr;
+	ObjModelDrawer m_objDrawer;
 	CubeManager m_cubeManager;
-	Cooling::CullingManager m_cullingManager;
 
 	CameraManager m_cameraManager;
 	CameraDrawer m_cameraDrawer;

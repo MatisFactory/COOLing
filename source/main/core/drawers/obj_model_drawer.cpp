@@ -4,11 +4,13 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-ObjModelDrawer::ObjModelDrawer(const std::string& fileName)
+ObjModelDrawer::ObjModelDrawer(const std::string& fileName, size_t count, const std::vector<glm::mat4>& transforms)
      : m_fileName(fileName)
      , m_shader("../../../shaders/SimpleObj.vertexShader", "../../../shaders/SimpleObj.fragmentShader")
 	 , m_transformLocation(glGetUniformLocation(m_shader.ID, "model"))
-	 , m_transform(glm::mat4(1.f))
+	 , m_normalizedTransform(glm::mat4(1.f))
+	 , m_countModelToDraw(count)
+	 , m_transfroms(transforms)
 {
 	m_loader = std::make_unique<objl::Loader>();
 	m_loader->LoadFile(m_fileName);
@@ -16,41 +18,48 @@ ObjModelDrawer::ObjModelDrawer(const std::string& fileName)
 	normalizeTransform();
 }
 
-ObjModelDrawer::~ObjModelDrawer()
-{
-
-}
+ObjModelDrawer::~ObjModelDrawer() = default;
 
 void ObjModelDrawer::draw()
 {
-	
 	m_shader.use();
 	setupViewProjection();
 	
-	glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(m_transform));
+	for(size_t i = 0; i < m_countModelToDraw; i++)
+	{
+		glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(m_transfroms[i] * m_normalizedTransform));
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glBindVertexArray(m_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, m_vertices.size() / 3);
-	glBindVertexArray(0);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glBindVertexArray(m_VAO);
+		glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
+		glBindVertexArray(0);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 }
 
 void ObjModelDrawer::normalizeTransform()
 {
 	float max = 0;
 
-	for (const auto& value : m_vertices)
+	for (const auto& vertex : m_vertices)
 	{
-		if (abs(value) > max)
+		if (abs(vertex.x) > max)
 		{
-			max = abs(value);
+			max = abs(vertex.x);
+		}
+		if (abs(vertex.y) > max)
+		{
+			max = abs(vertex.y);
+		}
+		if (abs(vertex.z) > max)
+		{
+			max = abs(vertex.z);
 		}
 	}
 
 	float newScale = 1.f/max;
 
-	m_transform = glm::scale(m_transform, glm::vec3(newScale, newScale, newScale));
+	m_normalizedTransform = glm::scale(m_normalizedTransform, glm::vec3(newScale, newScale, newScale));
 }
 
 void ObjModelDrawer::loadOpenGLObjects()
@@ -59,9 +68,7 @@ void ObjModelDrawer::loadOpenGLObjects()
 
 	for (const auto& vertex : m_loader->LoadedVertices)
 	{
-		m_vertices.push_back(vertex.Position.X);
-		m_vertices.push_back(vertex.Position.Y);
-		m_vertices.push_back(vertex.Position.Z);
+		m_vertices.emplace_back(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
 	}
 
 	glGenVertexArrays(1, &m_VAO);
@@ -70,7 +77,7 @@ void ObjModelDrawer::loadOpenGLObjects()
 	glGenBuffers(1, &m_VBO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_vertices.size(), &m_vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * m_vertices.size(), &m_vertices[0], GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	glEnableVertexAttribArray(0);

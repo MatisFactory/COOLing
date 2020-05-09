@@ -16,7 +16,7 @@ class Loader;
 class ObjModelDrawer
 {
 public:
-	ObjModelDrawer(const std::string& fileName);
+	ObjModelDrawer(const std::string& fileName, size_t count = 1, const std::vector<glm::mat4>& transforms = {glm::mat4(1.f)});
 	~ObjModelDrawer();
 	void draw();
 private:
@@ -25,12 +25,15 @@ private:
 	void setupViewProjection();
 private:
 	std::string m_fileName;
-	std::vector<float> m_vertices;
+	size_t m_countModelToDraw;
+	std::vector<glm::mat4> m_transfroms;
+
+	std::vector<glm::vec3> m_vertices;
 	
 	Shader m_shader;
 	std::unique_ptr<objl::Loader> m_loader;
 
-	glm::mat4 m_transform;
+	glm::mat4 m_normalizedTransform;
 
 	GLint m_transformLocation;
 	GLuint m_VAO;
