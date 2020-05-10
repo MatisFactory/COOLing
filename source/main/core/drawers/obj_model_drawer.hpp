@@ -8,10 +8,7 @@
 #include <string>
 #include <memory>
 
-namespace objl
-{
-class Loader;
-}
+#include <main/third_party/OBJ_Loader.h>
 
 class ObjModelDrawer
 {

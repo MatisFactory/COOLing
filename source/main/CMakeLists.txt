@@ -32,6 +32,7 @@ set(FILES
 	 models/obj_model.cpp
 	 models/obj_model.hpp
 	 third_party/OBJ_Loader.h
+	 third_party/OBJ_Loader.cpp
 	 )
 
 add_executable(main ${FILES})
