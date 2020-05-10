@@ -11,21 +11,33 @@
 
 class ObjModel
 {
+	friend struct ModelHasher;
 public:
 	ObjModel(const std::string& filename);
 
-	bool loadModel();
+	bool operator==(const ObjModel& model) const;
+
+	bool loadModel(bool normalizeVertex = true);
 
 	std::vector<glm::vec3> getVertices() const;
-	std::vector<glm::vec3> getUniqueVertices() const;
-
 	Cooling::AABB getAABB() const;
+private:
+	void normalizeVertices();
 private:
 	std::string m_filename;
 	objl::Loader m_loader;
 
 	std::vector<glm::vec3> m_vertices;
-	std::vector<glm::vec3> m_uniqueVetices;
 
 	Cooling::AABB m_aabb;
+};
+
+struct ModelHasher
+{
+	size_t operator()(const ObjModel& model) const
+	{
+		const size_t coef = 2'946'901;
+		std::hash<std::string> hasher;
+		return hasher(model.m_filename);
+	}
 };

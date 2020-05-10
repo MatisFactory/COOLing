@@ -1,36 +1,26 @@
 #pragma once
 
 #include <main/core/shader/shader.hpp>
+#include <main/models/obj_model.hpp>
 
 #include <glm/glm.hpp>
 
 #include <vector>
-#include <string>
-#include <memory>
-
-#include <main/third_party/OBJ_Loader.h>
 
 class ObjModelDrawer
 {
 public:
-	ObjModelDrawer(const std::string& fileName, size_t count = 1, const std::vector<glm::mat4>& transforms = {glm::mat4(1.f)});
-	~ObjModelDrawer();
-	void draw();
+	ObjModelDrawer();
+	ObjModelDrawer(const ObjModel& model);
+	
+	void activateShader(Shader& m_shader);
+	void draw(const glm::mat4& transforms);
 private:
-	void normalizeTransform();
 	void loadOpenGLObjects();
-	void setupViewProjection();
 private:
-	std::string m_fileName;
-	size_t m_countModelToDraw;
-	std::vector<glm::mat4> m_transfroms;
+	ObjModel m_model;
 
 	std::vector<glm::vec3> m_vertices;
-	
-	Shader m_shader;
-	std::unique_ptr<objl::Loader> m_loader;
-
-	glm::mat4 m_normalizedTransform;
 
 	GLint m_transformLocation;
 	GLuint m_VAO;

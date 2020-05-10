@@ -60,4 +60,27 @@ AABB createAABBByVertex(const std::vector<glm::vec3>& vertecies)
 
      return aabb;
 }
+
+AABB transformedAABB(const AABB& aabb, const glm::mat4& transform)
+{
+	glm::vec3 diagonal = aabb.max - aabb.min;
+	glm::vec3 v0 = aabb.min;
+	glm::vec3 v1 = aabb.min + diagonal.x;
+	glm::vec3 v2 = aabb.min + diagonal.y;
+	glm::vec3 v3 = aabb.min + diagonal.x + diagonal.y;
+	glm::vec3 v4 = aabb.max;
+	glm::vec3 v5 = aabb.max - diagonal.x;
+	glm::vec3 v6 = aabb.min - diagonal.y;
+	glm::vec3 v7 = aabb.min - diagonal.x - diagonal.y;
+
+	std::vector<glm::vec3> verticesAABB = { v0, v1, v2, v3, v4, v5, v6, v7};
+
+	for (auto& vertex : verticesAABB)
+	{
+		vertex = transform * glm::vec4(vertex, 1.f);
+	}
+
+	return createAABBByVertex(verticesAABB);
+}
+
 } // namespace Cooling

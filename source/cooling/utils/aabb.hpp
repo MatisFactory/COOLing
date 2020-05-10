@@ -20,4 +20,5 @@ struct COOLING_DLL AABB
 };
 
 COOLING_DLL AABB createAABBByVertex(const std::vector<glm::vec3>& vertecies);
+COOLING_DLL AABB transformedAABB(const AABB& aabb, const glm::mat4& transform);
 } // namespace Cooling

@@ -6,72 +6,44 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-ObjModelDrawer::ObjModelDrawer(const std::string& fileName, size_t count, const std::vector<glm::mat4>& transforms)
-     : m_fileName(fileName)
-     , m_shader("../../../shaders/SimpleObj.vertexShader", "../../../shaders/SimpleObj.fragmentShader")
-	 , m_transformLocation(glGetUniformLocation(m_shader.ID, "model"))
-	 , m_normalizedTransform(glm::mat4(1.f))
-	 , m_countModelToDraw(count)
-	 , m_transfroms(transforms)
+ObjModelDrawer::ObjModelDrawer(const ObjModel& model)
+	: m_model(model)
 {
-	m_loader = std::make_unique<objl::Loader>();
-	m_loader->LoadFile(m_fileName);
 	loadOpenGLObjects();
-	normalizeTransform();
 }
 
-ObjModelDrawer::~ObjModelDrawer() = default;
-
-void ObjModelDrawer::draw()
+ObjModelDrawer::ObjModelDrawer()
+	: m_model("")
 {
-	m_shader.use();
-	setupViewProjection();
-	
-	for(size_t i = 0; i < m_countModelToDraw; i++)
-	{
-		glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(m_transfroms[i] * m_normalizedTransform));
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glBindVertexArray(m_VAO);
-		glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
-		glBindVertexArray(0);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
 }
 
-void ObjModelDrawer::normalizeTransform()
+void ObjModelDrawer::activateShader(Shader& shader)
 {
-	float max = 0;
+	shader.use();
 
-	for (const auto& vertex : m_vertices)
-	{
-		if (abs(vertex.x) > max)
-		{
-			max = abs(vertex.x);
-		}
-		if (abs(vertex.y) > max)
-		{
-			max = abs(vertex.y);
-		}
-		if (abs(vertex.z) > max)
-		{
-			max = abs(vertex.z);
-		}
-	}
-
-	float newScale = 1.f/max;
-
-	m_normalizedTransform = glm::scale(m_normalizedTransform, glm::vec3(newScale, newScale, newScale));
+	m_transformLocation = glGetUniformLocation(shader.ID, "model");
+	GLint viewLoc = glGetUniformLocation(shader.ID, "view");
+	GLint projLoc = glGetUniformLocation(shader.ID, "projection");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::currentViewMatrix()));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::currentProjectionMatrix()));
 }
+
+void ObjModelDrawer::draw(const glm::mat4& transform)
+{
+	glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(transform));
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glBindVertexArray(m_VAO);
+	glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
+	glBindVertexArray(0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+}
+
 
 void ObjModelDrawer::loadOpenGLObjects()
 {
-	m_vertices.reserve(m_loader->LoadedVertices.size());
-
-	for (const auto& vertex : m_loader->LoadedVertices)
-	{
-		m_vertices.emplace_back(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
-	}
+	m_vertices = m_model.getVertices();
 
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray(m_VAO);
@@ -87,12 +59,4 @@ void ObjModelDrawer::loadOpenGLObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	
 	glBindVertexArray(0);
-}
-
-void ObjModelDrawer::setupViewProjection()
-{
-	GLint viewLoc = glGetUniformLocation(m_shader.ID, "view");
-	GLint projLoc = glGetUniformLocation(m_shader.ID, "projection");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::currentViewMatrix()));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(CameraManager::currentProjectionMatrix()));
 }

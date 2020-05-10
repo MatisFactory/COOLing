@@ -5,14 +5,23 @@ ObjModel::ObjModel(const std::string& filename)
 {
 }
 
-bool ObjModel::loadModel()
+bool ObjModel::operator==(const ObjModel& model) const
+{
+	return m_filename == model.m_filename;
+}
+
+bool ObjModel::loadModel(bool normalize)
 {
 	if (m_loader.LoadFile(m_filename))
 	{
 		m_vertices = objl::veticesToVectorOfVec3(m_loader.LoadedVertices);
-		m_uniqueVetices = m_loader.LoadedUniqueVertices;
 
-		m_aabb = Cooling::createAABBByVertex(m_uniqueVetices);
+		if(normalize)
+		{
+			normalizeVertices();
+		}
+
+		m_aabb = Cooling::createAABBByVertex(m_vertices);
 
 		return true;
 	}
@@ -27,12 +36,35 @@ std::vector<glm::vec3> ObjModel::getVertices() const
 	return m_vertices;
 }
 
-std::vector<glm::vec3> ObjModel::getUniqueVertices() const
-{
-	return m_uniqueVetices;
-}
-
 Cooling::AABB ObjModel::getAABB() const
 {
 	return m_aabb;
+}
+
+void ObjModel::normalizeVertices()
+{
+	float max = 0.f;
+
+	for (const auto& vertex : m_vertices)
+	{
+		if (abs(vertex.x) > max)
+		{
+			max = abs(vertex.x);
+		}
+
+		if (abs(vertex.y) > max)
+		{
+			max = abs(vertex.y);
+		}
+
+		if (abs(vertex.z) > max)
+		{
+			max = abs(vertex.z);
+		}
+	}
+
+	for (auto& vertex : m_vertices)
+	{
+		vertex /= max; 
+	}
 }

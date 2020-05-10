@@ -29,6 +29,8 @@ set(FILES
 	 models/cube_manager.hpp
 	 models/cube.cpp
 	 models/cube.hpp
+	 models/obj_model_manager.cpp
+	 models/obj_model_manager.hpp
 	 models/obj_model.cpp
 	 models/obj_model.hpp
 	 third_party/OBJ_Loader.h

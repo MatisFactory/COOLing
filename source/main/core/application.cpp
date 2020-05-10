@@ -28,13 +28,10 @@ namespace
 
 Application::Application()
 	: m_cameraManager(m_window)
-	, m_objDrawer("../../../obj_models/airplane.obj")
 {
 	auto& cullingManager = CullingWrapper::instance().cullingManager();
 	cullingManager.setSceneAABB(Cooling::AABB(glm::vec3(-SCENE_WIDTH, -SCENE_HEIGHT, -SCENE_WIDTH),
 												glm::vec3(SCENE_WIDTH, SCENE_HEIGHT, SCENE_WIDTH)));
-
-	m_cubeManager.init();
 
 	cullingManager.setEnabled(isCullingOptimizationActive);
 }
@@ -114,8 +111,7 @@ void Application::draw()
 		m_cameraDrawer.draw();
 	}
 
-	m_objDrawer.draw();
-	m_cubeManager.draw();
+	m_objManager.draw();
 }
 
 
@@ -205,7 +201,7 @@ void Application::addToDrawImGui()
 			m_cameraManager.setRotateByYaw(rotateNotMainCameraByYaw);
 		}
 
-		ImGui::LabelText("", "Count drawed cube: %d", m_cubeManager.countDrawedCube());
+		//ImGui::LabelText("", "Count drawed cube: %d", m_cubeManager.countDrawedCube());
 
 		ImGui::End();
 	}
