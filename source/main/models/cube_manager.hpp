@@ -17,12 +17,7 @@ class CubeManager
 {
 public:
 	CubeManager();
-
 	void init(uint32_t count = COUNT_OF_CUBES);
-
-	bool cullObjects() const;
-
-	void setCullObjects(bool value);
 
 	void draw();
 
@@ -34,8 +29,6 @@ private:
 	std::vector<Cube> m_cubes;
 	std::vector<Cooling::UniqueIndex> m_cullingIndexes;
 	GLint m_transformLocation;
-
-	bool m_cullObjects = false;
 
 	uint32_t m_countDrawedCube = 0;
 };

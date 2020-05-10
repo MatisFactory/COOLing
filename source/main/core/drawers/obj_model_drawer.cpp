@@ -1,5 +1,6 @@
 #include <main/core/drawers/obj_model_drawer.hpp>
 #include <main/core/camera/camera_manager.hpp>
+#include <main/core/culling_wrapper.hpp>
 #include <main/third_party/OBJ_Loader.h>
 
 #include <glm/gtc/type_ptr.hpp>

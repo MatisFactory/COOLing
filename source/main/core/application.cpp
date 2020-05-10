@@ -30,12 +30,13 @@ Application::Application()
 	: m_cameraManager(m_window)
 	, m_objDrawer("../../../obj_models/airplane.obj")
 {
-	CullingWrapper::instance().cullingManager().setSceneAABB(Cooling::AABB(glm::vec3(-SCENE_WIDTH, -SCENE_HEIGHT, -SCENE_WIDTH),
+	auto& cullingManager = CullingWrapper::instance().cullingManager();
+	cullingManager.setSceneAABB(Cooling::AABB(glm::vec3(-SCENE_WIDTH, -SCENE_HEIGHT, -SCENE_WIDTH),
 												glm::vec3(SCENE_WIDTH, SCENE_HEIGHT, SCENE_WIDTH)));
 
 	m_cubeManager.init();
 
-	m_cubeManager.setCullObjects(isCullingOptimizationActive);
+	cullingManager.setEnabled(isCullingOptimizationActive);
 }
 
 void Application::run()
@@ -161,10 +162,10 @@ void Application::addToDrawImGui()
 			m_cameraManager.insertCamera();
 		}
 
-		isCullingOptimizationActive = m_cubeManager.cullObjects();
+		isCullingOptimizationActive = cullingManager.isEnabled();
 		if (ImGui::Checkbox("Cull objects", &isCullingOptimizationActive))
 		{
-			m_cubeManager.setCullObjects(isCullingOptimizationActive);
+			cullingManager.setEnabled(isCullingOptimizationActive);
 			
 			if(isCullingOptimizationActive)
 			{
@@ -181,7 +182,7 @@ void Application::addToDrawImGui()
 		isCullingOptimizationActive = isCullingOptimizationActive & 
 			(cullObjectsForCurrentCamera || cullObjectsForNotCurrentCamera);
 		
-		m_cubeManager.setCullObjects(isCullingOptimizationActive);
+		cullingManager.setEnabled(isCullingOptimizationActive);
 
 		if (ImGui::Checkbox("Basic culling algorithm", &basicCullingAlgorithm))
 		{

@@ -43,16 +43,6 @@ void CubeManager::init(uint32_t count /*= COUNT_OF_CUBES*/)
 	}
 }
 
-bool CubeManager::cullObjects() const
-{
-	return m_cullObjects;
-}
-
-void CubeManager::setCullObjects(bool value)
-{
-	m_cullObjects = value;
-}
-
 void CubeManager::draw()
 {
 	Cooling::Profiler p("Draw");
@@ -63,12 +53,9 @@ void CubeManager::draw()
 
 	for (uint32_t i = 0; i < m_cubes.size(); i++)
 	{
-		if (m_cullObjects)
+		if (!CullingWrapper::instance().cullingManager().isVisible(i))
 		{
-			if (!CullingWrapper::instance().cullingManager().isVisible(i))
-			{
-				continue;
-			}
+			continue;
 		}
 
 		glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(m_cubes[i].worldTransform()));
