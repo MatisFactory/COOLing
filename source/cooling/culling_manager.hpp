@@ -39,6 +39,9 @@ public:
 
 	bool hasAlgorithm() const;
 	void setAlgorithm(uint32_t algorithm);
+
+	bool isEnabled() const;
+	void setEnabled(bool value);
 private:
 	Objects m_objects;
 	FrustumView m_frustumView;
@@ -47,5 +50,8 @@ private:
 
 	std::unique_ptr<Algorithm> m_algorithm;
 	uint32_t m_algorithmFilter;
+
+	// for run-time debugging purpose
+	bool m_isEnabled = false;
 };
 } // namespace Cooling

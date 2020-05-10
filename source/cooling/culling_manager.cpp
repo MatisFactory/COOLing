@@ -24,7 +24,12 @@ UniqueIndex CullingManager::registerObject(const AABB& aabb)
 
 bool CullingManager::isVisible(UniqueIndex index) const
 {
-	return m_objects[index]->isVisible();
+	if(m_isEnabled)
+	{
+		return m_objects[index]->isVisible();
+	}
+
+	return true;
 }
 
 Objects& CullingManager::objects()
@@ -34,6 +39,11 @@ Objects& CullingManager::objects()
 
 void CullingManager::update()
 {
+	if (!m_isEnabled)
+	{
+		return;
+	}
+
 	cleanupObjectsInfo();
 
 	m_frustumView.updateFrustumView();
@@ -85,6 +95,16 @@ void CullingManager::setAlgorithm(uint32_t algorithm)
 	}
 
 	m_algorithm->init(m_objects, m_sceneAABB);
+}
+
+bool CullingManager::isEnabled() const
+{
+	return m_isEnabled;
+}
+
+void CullingManager::setEnabled(bool value)
+{
+	m_isEnabled = value;
 }
 
 } // namespace Cooling
