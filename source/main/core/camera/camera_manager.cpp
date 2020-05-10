@@ -87,7 +87,7 @@ void CameraManager::tick(float dt)
 	{
 		if (Camera* notCurrentCamera = getFirstNotCurrentCamera())
 		{
-			notCurrentCamera->rotateYaw(dt* notCurrentCamera->sensitivity());
+			notCurrentCamera->rotateYaw(dt* notCurrentCamera->rotationSpeed());
 		}
 	}
 }

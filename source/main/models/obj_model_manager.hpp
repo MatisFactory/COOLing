@@ -30,6 +30,8 @@ public:
 
 	void draw();
 private:
+	void loadAirplanes();
+	void loadCubes();
 	void addToCullingManager();
 private:
 	std::unordered_map<ObjModel, ObjModelInfo, ModelHasher> m_objModels;

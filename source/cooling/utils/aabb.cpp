@@ -64,14 +64,16 @@ AABB createAABBByVertex(const std::vector<glm::vec3>& vertecies)
 AABB transformedAABB(const AABB& aabb, const glm::mat4& transform)
 {
 	glm::vec3 diagonal = aabb.max - aabb.min;
+	glm::vec3 x = glm::vec3(diagonal.x, 0.f, 0.f);
+	glm::vec3 y = glm::vec3(0.f, diagonal.y, 0.f);
 	glm::vec3 v0 = aabb.min;
-	glm::vec3 v1 = aabb.min + diagonal.x;
-	glm::vec3 v2 = aabb.min + diagonal.y;
-	glm::vec3 v3 = aabb.min + diagonal.x + diagonal.y;
+	glm::vec3 v1 = aabb.min + x;
+	glm::vec3 v2 = aabb.min + y;
+	glm::vec3 v3 = aabb.min + x + y;
 	glm::vec3 v4 = aabb.max;
-	glm::vec3 v5 = aabb.max - diagonal.x;
-	glm::vec3 v6 = aabb.min - diagonal.y;
-	glm::vec3 v7 = aabb.min - diagonal.x - diagonal.y;
+	glm::vec3 v5 = aabb.max - x;
+	glm::vec3 v6 = aabb.max - y;
+	glm::vec3 v7 = aabb.max - x - y;
 
 	std::vector<glm::vec3> verticesAABB = { v0, v1, v2, v3, v4, v5, v6, v7};
 

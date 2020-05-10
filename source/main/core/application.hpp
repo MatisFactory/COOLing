@@ -2,11 +2,9 @@
 
 #include <main/core/window.hpp>
 #include <main/core/camera/camera_manager.hpp>
-#include <main/core/clock/clock.hpp>
-#include <main/core/shader/shader.hpp>
-#include <main/models/cube_manager.hpp>
-#include <main/core/drawers/camera_drawer.hpp>
 #include <main/models/obj_model_manager.hpp>
+#include <main/core/clock/clock.hpp>
+#include <main/core/drawers/camera_drawer.hpp>
 
 class Application
 {
@@ -34,7 +32,6 @@ private:
 	Clock m_clock;
 
 	ObjModelManager m_objManager;
-	//CubeManager m_cubeManager;
 
 	CameraManager m_cameraManager;
 	CameraDrawer m_cameraDrawer;
