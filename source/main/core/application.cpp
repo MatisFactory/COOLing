@@ -186,6 +186,11 @@ void Application::addToDrawImGui()
 		{
 			cullingManager.setAlgorithm(octreeAlgorithm ? Cooling::OctreeCulling : Cooling::None);
 		}
+		bool enabledOcclusionQuery = m_objManager.enabledOcclusionQueries();
+		if (ImGui::Checkbox("Occlusion culling", &enabledOcclusionQuery))
+		{
+			m_objManager.setEnabledOcclusionQueris(enabledOcclusionQuery);
+		}
 		if (ImGui::Checkbox("Regular space partitioning algorithm", &regularSpacePartitioningAlgorithm))
 		{
 			cullingManager.setAlgorithm(regularSpacePartitioningAlgorithm ? Cooling::AlRegularSpacePartitioning : Cooling::None);
@@ -199,7 +204,7 @@ void Application::addToDrawImGui()
 			m_cameraManager.setRotateByYaw(rotateNotMainCameraByYaw);
 		}
 
-		//ImGui::LabelText("", "Count drawed cube: %d", m_cubeManager.countDrawedCube());
+		ImGui::LabelText("", "Count drawed model: %d", m_objManager.countDrawed());
 
 		ImGui::End();
 	}

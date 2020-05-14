@@ -2,6 +2,7 @@
 
 ObjModel::ObjModel(const std::string& filename)
 	: m_filename(filename)
+	, m_loaded(false)
 {
 }
 
@@ -23,12 +24,18 @@ bool ObjModel::loadModel(bool normalize)
 
 		m_aabb = Cooling::createAABBByVertex(m_vertices);
 
+		m_loaded = true;
 		return true;
 	}
 	else
 	{
 		return false;
 	}
+}
+
+bool ObjModel::isLoaded() const
+{
+	return m_loaded;
 }
 
 std::vector<glm::vec3> ObjModel::getVertices() const

@@ -19,6 +19,8 @@ public:
 
 	bool loadModel(bool normalizeVertex = true);
 
+	bool isLoaded() const;
+
 	std::vector<glm::vec3> getVertices() const;
 	Cooling::AABB getAABB() const;
 private:
@@ -26,6 +28,8 @@ private:
 private:
 	std::string m_filename;
 	objl::Loader m_loader;
+
+	bool m_loaded;
 
 	std::vector<glm::vec3> m_vertices;
 

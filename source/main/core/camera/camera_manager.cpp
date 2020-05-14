@@ -5,7 +5,7 @@
 namespace
 {
 	static const std::string CAMERA_NAME;
-	constexpr float DEFAULT_FAR = 500.f;
+	constexpr float DEFAULT_FAR = 5000.f;
 	constexpr float MAIN_CAMERA_FAR = DEFAULT_FAR * 5;
 }
 

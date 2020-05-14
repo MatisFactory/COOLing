@@ -13,7 +13,7 @@ Profiler::~Profiler()
 {
 	auto finish = std::chrono::system_clock::now();
 	auto time = std::chrono::duration_cast<std::chrono::microseconds>(finish - m_startTime).count();
-	std::cout << m_name << " duration is " << time << " microsecond\n";
+	//std::cout << m_name << " duration is " << time << " microsecond\n";
 }
 
 } // namespace Cooling

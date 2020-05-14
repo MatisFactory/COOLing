@@ -32,11 +32,11 @@ void ObjModelDrawer::draw(const glm::mat4& transform)
 {
 	glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, glm::value_ptr(transform));
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBindVertexArray(m_VAO);
 	glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
 	glBindVertexArray(0);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 }
 

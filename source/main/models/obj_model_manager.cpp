@@ -8,8 +8,8 @@
 
 namespace
 {
-	constexpr size_t AIRPLANES_COUNT = 1000;
-	constexpr size_t CUBES_COUNT = 1000;
+	constexpr size_t AIRPLANES_COUNT = 1;
+	constexpr size_t CUBES_COUNT = 10;
 	constexpr float SCALE_AIRPLANE = 20.f;
 	constexpr float SCALE_CUBES = 25.f;
 
@@ -19,16 +19,16 @@ namespace
 
 ObjModelManager::ObjModelManager()
 {
-	loadAirplanes();
 	loadCubes();
+	loadAirplanes();
 
 	addToCullingManager();
 }
 
 void ObjModelManager::draw()
 {
+	m_countDrawed = 0;
 	auto& cullingManager = CullingWrapper::instance().cullingManager();
-
 
 	for (auto&[model, info] : m_objModels)
 	{
@@ -39,10 +39,30 @@ void ObjModelManager::draw()
 		{
 			if (cullingManager.isVisible(info.uids[i++]))
 			{
+				if (info.hardToDraw)
+				{
+					drawBox(Cooling::transformedAABB(model.getAABB(), transform), true);
+				}
 				info.drawer.draw(transform);
+				m_countDrawed++;
 			}
 		}
 	}
+}
+
+bool ObjModelManager::enabledOcclusionQueries() const
+{
+	return m_occlusionQueryEnabled;
+}
+
+void ObjModelManager::setEnabledOcclusionQueris(bool value)
+{
+	m_occlusionQueryEnabled = value;
+}
+
+size_t ObjModelManager::countDrawed() const
+{
+	return m_countDrawed;
 }
 
 // translation * rotation * scale
@@ -60,7 +80,7 @@ void ObjModelManager::loadAirplanes()
 
 	ObjModel airplane("../../../obj_models/airplane.obj");
 	airplane.loadModel();
-	ObjModelInfo modelInfo({}, Shader(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER), ObjModelDrawer(airplane));
+	ObjModelInfo modelInfo({}, Shader(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER), ObjModelDrawer(airplane), true);
 	auto& transforms = modelInfo.transforms;
 
 	for (size_t i = 0; i < AIRPLANES_COUNT; i++)
@@ -123,5 +143,36 @@ void ObjModelManager::addToCullingManager()
 		{
 			modelInfo.uids.push_back(cullingManager.registerObject(Cooling::transformedAABB(model.getAABB(), transform)));
 		}
+	}
+}
+
+void ObjModelManager::drawBox(const Cooling::AABB& aabb, bool wireframe)
+{
+	// should be active shader
+	// cube from -1 to 1 by each axis
+	static ObjModel cube("../../../obj_models/cube.obj");
+	if(!cube.isLoaded())
+	{
+		cube.loadModel();
+	}
+	static ObjModelDrawer drawer(cube);
+
+	const glm::vec3 halfDiagonal = (aabb.max - aabb.min) * 0.5f;
+	const glm::vec3 position = aabb.min + halfDiagonal;
+
+	glm::mat4 transform = glm::mat4(1.f);
+
+	transform = glm::translate(transform, position);
+	transform = glm::scale(transform, halfDiagonal);
+
+	if (wireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		drawer.draw(transform);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+	else
+	{
+		drawer.draw(transform);
 	}
 }

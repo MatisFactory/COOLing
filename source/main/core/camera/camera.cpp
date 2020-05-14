@@ -5,8 +5,8 @@
 
 namespace
 {
-	constexpr float CAMERA_SENSITIVITY = 0.01f;
-	constexpr float ROTATION_SPEED = 0.08f;
+	constexpr float CAMERA_SENSITIVITY = 0.05f;
+	constexpr float ROTATION_SPEED = 0.15f;
 	constexpr glm::vec3 DEFAULT_POSITION = glm::vec3(5.f, 0.f, 0.f);
 	constexpr glm::vec3 DEFAULT_TARGET = glm::vec3(0.f,0.f,0.f);
 	constexpr glm::vec3 DEFAULT_UP = glm::vec3(0.f, 1.f, 0.f);
