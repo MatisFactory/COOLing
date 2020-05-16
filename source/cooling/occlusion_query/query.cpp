@@ -5,6 +5,7 @@ namespace Cooling
 
 Query::Query()
 {
+	/*GLuint id = 0;*/
 	m_id = 0;
 	glGenQueries(1, &m_id);
 }
@@ -14,7 +15,7 @@ Query::~Query()
 	glDeleteQueries(1, &m_id);
 }
 
-void Query::addQueryTask(std::function<void(AABB, bool)> drawBoxFunction, const AABB& aabb)
+void Query::addQueryTask(std::function<void(AABB)> drawBoxFunction, const AABB& aabb)
 {
 	glColorMask(false, false, false, false);
 	glDepthMask(GL_FALSE);
@@ -23,9 +24,12 @@ void Query::addQueryTask(std::function<void(AABB, bool)> drawBoxFunction, const 
 	
 	glEnable(GL_DEPTH_TEST);
 
-	drawBoxFunction(aabb, false);
+	drawBoxFunction(aabb);
 
 	glEndQuery(GL_SAMPLES_PASSED);
+
+	glColorMask(true, true, true, true);
+	glDepthMask(GL_TRUE);
 }
 
 bool Query::isVisible() const

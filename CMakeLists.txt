@@ -20,12 +20,14 @@ add_subdirectory(source/imgui)
 add_subdirectory(lib/glfw EXCLUDE_FROM_ALL)
 target_link_libraries(main PRIVATE glfw)
 target_link_libraries(imgui PRIVATE glfw)
+target_link_libraries(cooling PRIVATE glfw)
 
 # glew
 add_definitions(-DGLEW_STATIC)
 add_subdirectory(lib/glew EXCLUDE_FROM_ALL)
 target_link_libraries(main PRIVATE libglew_static)
 target_link_libraries(imgui PRIVATE libglew_static)
+target_link_libraries(cooling PRIVATE libglew_static)
 
 # glm
 add_subdirectory(lib/glm EXCLUDE_FROM_ALL)

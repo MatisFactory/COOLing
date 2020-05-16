@@ -8,8 +8,8 @@
 
 namespace
 {
-	constexpr size_t AIRPLANES_COUNT = 1;
-	constexpr size_t CUBES_COUNT = 10;
+	constexpr size_t AIRPLANES_COUNT = 1000;
+	constexpr size_t CUBES_COUNT = 20;
 	constexpr float SCALE_AIRPLANE = 20.f;
 	constexpr float SCALE_CUBES = 25.f;
 
@@ -23,6 +23,12 @@ ObjModelManager::ObjModelManager()
 	loadAirplanes();
 
 	addToCullingManager();
+	auto& cullingManager = CullingWrapper::instance().cullingManager();
+	cullingManager.setupQueriesManager([this](const Cooling::AABB& aabb)
+	{
+		drawBox(aabb, true);
+	});
+
 }
 
 void ObjModelManager::draw()
@@ -39,10 +45,10 @@ void ObjModelManager::draw()
 		{
 			if (cullingManager.isVisible(info.uids[i++]))
 			{
-				if (info.hardToDraw)
+				/*if (info.hardToDraw)
 				{
 					drawBox(Cooling::transformedAABB(model.getAABB(), transform), true);
-				}
+				}*/
 				info.drawer.draw(transform);
 				m_countDrawed++;
 			}
@@ -141,7 +147,7 @@ void ObjModelManager::addToCullingManager()
 	{
 		for (const auto& transform : modelInfo.transforms)
 		{
-			modelInfo.uids.push_back(cullingManager.registerObject(Cooling::transformedAABB(model.getAABB(), transform)));
+			modelInfo.uids.push_back(cullingManager.registerObject(Cooling::transformedAABB(model.getAABB(), transform), modelInfo.hardToDraw));
 		}
 	}
 }

@@ -5,9 +5,11 @@
 #include <cooling/object.hpp>
 #include <cooling/frustum_view.hpp>
 #include <cooling/algorithms/algorithm.hpp>
+#include <cooling/occlusion_query/queries_manager.hpp>
 
 #include <glm/glm.hpp>
 
+#include <functional>
 #include <memory>
 
 namespace Cooling
@@ -27,7 +29,7 @@ public:
 	
 	void setSceneAABB(const AABB& sceneAABB);
 
-	[[nodiscard]] UniqueIndex registerObject(const AABB& aabb);
+	[[nodiscard]] UniqueIndex registerObject(const AABB& aabb, bool hardToDraw = false);
 	void setViewProjectionMatrix(const glm::mat4& viewProjection);
 	bool isVisible(UniqueIndex index) const;
 
@@ -42,6 +44,11 @@ public:
 
 	bool isEnabled() const;
 	void setEnabled(bool value);
+
+	bool occlusionQueryEnabled() const;
+	void setOcclusionQueryEnabled(bool value);
+
+	void setupQueriesManager(std::function<void(AABB)> drawedFunction);
 private:
 	Objects m_objects;
 	FrustumView m_frustumView;
@@ -51,7 +58,10 @@ private:
 	std::unique_ptr<Algorithm> m_algorithm;
 	uint32_t m_algorithmFilter;
 
+	std::unique_ptr<QueriesManager> m_queriesManager;
+
 	// for run-time debugging purpose
 	bool m_isEnabled = false;
+	bool m_occlusionQueryEnabled = false;
 };
 } // namespace Cooling

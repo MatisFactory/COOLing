@@ -99,6 +99,8 @@ void Application::tickCullingManager(float dt)
 		cullingManager.setViewProjectionMatrix(firstNotCurrentCamera->getProjection() * firstNotCurrentCamera->getView());
 	}
 
+	GLuint id = 0;
+	glGenQueries(1, &id);
 	cullingManager.update();
 }
 
@@ -186,10 +188,10 @@ void Application::addToDrawImGui()
 		{
 			cullingManager.setAlgorithm(octreeAlgorithm ? Cooling::OctreeCulling : Cooling::None);
 		}
-		bool enabledOcclusionQuery = m_objManager.enabledOcclusionQueries();
+		bool enabledOcclusionQuery = cullingManager.occlusionQueryEnabled();
 		if (ImGui::Checkbox("Occlusion culling", &enabledOcclusionQuery))
 		{
-			m_objManager.setEnabledOcclusionQueris(enabledOcclusionQuery);
+			cullingManager.setOcclusionQueryEnabled(enabledOcclusionQuery);
 		}
 		if (ImGui::Checkbox("Regular space partitioning algorithm", &regularSpacePartitioningAlgorithm))
 		{

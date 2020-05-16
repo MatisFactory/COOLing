@@ -13,6 +13,8 @@ set(FILES
      algorithms/regular_space_partitioning.cpp
      algorithms/regular_space_partitioning.hpp
      export/cooling_dll.hpp
+     occlusion_query/queries_manager.cpp
+     occlusion_query/queries_manager.hpp
      occlusion_query/query.cpp
      occlusion_query/query.hpp
      profiler/profiler.cpp

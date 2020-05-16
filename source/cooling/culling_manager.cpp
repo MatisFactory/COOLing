@@ -15,9 +15,9 @@ void CullingManager::setSceneAABB(const AABB& sceneAABB)
 	m_sceneAABB = sceneAABB;
 }
 
-UniqueIndex CullingManager::registerObject(const AABB& aabb)
+UniqueIndex CullingManager::registerObject(const AABB& aabb, bool hardToDraw)
 {
-	m_objects.push_back(std::make_shared<Object>(aabb));
+	m_objects.push_back(std::make_shared<Object>(aabb, hardToDraw));
 
 	return m_objects.back()->getID();
 }
@@ -51,6 +51,12 @@ void CullingManager::update()
 	if (m_algorithm)
 	{
 		m_algorithm->cullObjects(m_frustumView.getFrustumPlanes());
+	}
+
+	if (m_occlusionQueryEnabled)
+	{
+		m_queriesManager->applyResult();
+		m_queriesManager->runQueries();
 	}
 }
 
@@ -105,6 +111,21 @@ bool CullingManager::isEnabled() const
 void CullingManager::setEnabled(bool value)
 {
 	m_isEnabled = value;
+}
+
+bool CullingManager::occlusionQueryEnabled() const
+{
+	return m_occlusionQueryEnabled;
+}
+
+void CullingManager::setOcclusionQueryEnabled(bool value)
+{
+	m_occlusionQueryEnabled = value;
+}
+
+void CullingManager::setupQueriesManager(std::function<void(AABB)> drawedFunction)
+{
+	m_queriesManager = std::make_unique<QueriesManager>(std::move(drawedFunction), m_objects);
 }
 
 } // namespace Cooling

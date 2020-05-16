@@ -18,15 +18,19 @@ class COOLING_DLL Object
 	static UniqueIndex s_currentFreeIndex;
 public:
 	Object() = default;
-	Object(const AABB& aabb);
+	Object(const AABB& aabb, bool hardToDraw = false);
 	AABB getAABB() const;
 	UniqueIndex getID() const;
 
+	bool hardToDraw() const;
+
 	bool isVisible() const;
 	void setVisible(bool value);
+	void setANDVisible(bool value);
 private:
-	UniqueIndex m_index = 0;
 	AABB m_aabb;
+	UniqueIndex m_index = 0;
+	bool m_hardToDraw = false;
 	bool m_isVisible = false;
 };
 
