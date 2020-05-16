@@ -15,8 +15,8 @@ namespace
 	constexpr float SCALE_CUBES_Y = 100;
 	constexpr float SCALE_CUBES_Z = 20;
 
-	const char* DEFAULT_VERTEX_SHADER = "../../../shaders/SimpleObj.vertexShader";
-	const char* DEFAULT_FRAGMENT_SHADER = "../../../shaders/SimpleObj.fragmentShader";
+	const char* DEFAULT_VERTEX_SHADER = "../../../shaders/SimpleObj.vert";
+	const char* DEFAULT_FRAGMENT_SHADER = "../../../shaders/SimpleObj.frag";
 }
 
 ObjModelManager::ObjModelManager()

@@ -30,7 +30,7 @@ namespace
 
 CameraDrawer::CameraDrawer(Camera* camera)
 	: m_camera(camera)
-	, m_shader("../../../shaders/camera.vertexShader", "../../../shaders/camera.fragmentShader")
+	, m_shader("../../../shaders/camera.vert", "../../../shaders/camera.frag")
 {
 }
 

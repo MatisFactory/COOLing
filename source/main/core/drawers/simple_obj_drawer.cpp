@@ -6,7 +6,7 @@
 
 ObjModelDrawer::ObjModelDrawer(const std::string& fileName)
      : m_fileName(fileName)
-     , m_shader("../../../shaders/SimpleObj.vertexShader", "../../../shaders/SimpleObj.fragmentShader")
+     , m_shader("../../../shaders/SimpleObj.vert", "../../../shaders/SimpleObj.frag")
 	 , m_transformLocation(glGetUniformLocation(m_shader.ID, "model"))
 	 , m_transform(glm::mat4(1.f))
 {

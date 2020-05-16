@@ -15,7 +15,7 @@
 
 
 CubeManager::CubeManager()
-	: m_shader("../../../shaders/Cube.vertexShader", "../../../shaders/Cube.fragmentShader")
+	: m_shader("../../../shaders/Cube.vert", "../../../shaders/Cube.frag")
 	, m_transformLocation(glGetUniformLocation(m_shader.ID, "model"))
 {
 }
