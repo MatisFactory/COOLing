@@ -20,7 +20,7 @@ void BasicCullingAlgorithm::cullObjects(const FrustumPlanes& planes)
 	{
 		if (isAABBVisible(planes, object->getAABB()))
 		{
-			object->setVisible(true);
+			object->setIsInFrustumView(true);
 		}
 	}
 }

@@ -36,6 +36,7 @@ public:
 	Objects& objects();
 
 	void update();
+	void runOcclusionQueryTasks();
 
 	void cleanupObjectsInfo();
 

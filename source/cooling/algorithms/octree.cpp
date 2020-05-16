@@ -111,7 +111,7 @@ void Octree::markVisibleOctreeNode(OctreeNode* octreeNode, const FrustumPlanes& 
 	{
 		if(isAABBVisible(planes, object->getAABB()))
 		{
-			object->setVisible(true);
+			object->setIsInFrustumView(true);
 		}
 	}
 }

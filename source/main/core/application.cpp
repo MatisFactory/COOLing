@@ -65,6 +65,9 @@ void Application::update()
 void Application::postUpdate()
 {
 	draw();
+
+	CullingWrapper::instance().cullingManager().runOcclusionQueryTasks();
+
 	addToDrawImGui();
 	drawImGui();
 

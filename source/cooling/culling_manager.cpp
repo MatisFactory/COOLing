@@ -56,6 +56,13 @@ void CullingManager::update()
 	if (m_occlusionQueryEnabled)
 	{
 		m_queriesManager->applyResult();
+	}
+}
+
+void CullingManager::runOcclusionQueryTasks()
+{
+	if (m_occlusionQueryEnabled)
+	{
 		m_queriesManager->runQueries();
 	}
 }
@@ -69,7 +76,8 @@ void CullingManager::cleanupObjectsInfo()
 {
 	for (auto& object : m_objects)
 	{
-		object->setVisible(false);
+		object->setIsInFrustumView(false);
+		object->setOccludedResult(std::nullopt);
 	}
 }
 

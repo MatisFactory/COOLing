@@ -8,10 +8,12 @@
 
 namespace
 {
-	constexpr size_t AIRPLANES_COUNT = 1000;
-	constexpr size_t CUBES_COUNT = 20;
+	constexpr size_t AIRPLANES_COUNT = 10000;
+	constexpr size_t CUBES_COUNT = 500;
 	constexpr float SCALE_AIRPLANE = 20.f;
-	constexpr float SCALE_CUBES = 25.f;
+	constexpr float SCALE_CUBES_X = 40;
+	constexpr float SCALE_CUBES_Y = 100;
+	constexpr float SCALE_CUBES_Z = 20;
 
 	const char* DEFAULT_VERTEX_SHADER = "../../../shaders/SimpleObj.vertexShader";
 	const char* DEFAULT_FRAGMENT_SHADER = "../../../shaders/SimpleObj.fragmentShader";
@@ -45,7 +47,7 @@ void ObjModelManager::draw()
 		{
 			if (cullingManager.isVisible(info.uids[i++]))
 			{
-				/*if (info.hardToDraw)
+			/*	if (info.hardToDraw)
 				{
 					drawBox(Cooling::transformedAABB(model.getAABB(), transform), true);
 				}*/
@@ -127,7 +129,7 @@ void ObjModelManager::loadCubes()
 	{
 		glm::mat4 transform = glm::mat4(1.f);
 
-		transform = glm::scale(transform, glm::vec3(SCALE_AIRPLANE, SCALE_AIRPLANE, SCALE_AIRPLANE));
+		transform = glm::scale(transform, glm::vec3(SCALE_CUBES_X, SCALE_CUBES_Y, SCALE_CUBES_Z));
 
 		transform[3][0] = plate(gen);
 		transform[3][1] = vertical(gen);

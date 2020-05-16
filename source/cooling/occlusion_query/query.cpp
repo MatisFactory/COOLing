@@ -3,7 +3,8 @@
 namespace Cooling
 {
 
-Query::Query()
+Query::Query(const ObjectPtr& object)
+	: m_object(object)
 {
 	/*GLuint id = 0;*/
 	m_id = 0;
@@ -32,17 +33,12 @@ void Query::addQueryTask(std::function<void(AABB)> drawBoxFunction, const AABB& 
 	glDepthMask(GL_TRUE);
 }
 
-bool Query::isVisible() const
+void Query::applyVisibility() const
 {
 	GLint countVisiblePoint = 0;
 	glGetQueryObjectiv(m_id, GL_QUERY_RESULT, &countVisiblePoint);
 
-	if (countVisiblePoint > 0)
-	{
-		return true;
-	}
-
-	return false;
+	m_object->setOccludedResult(countVisiblePoint > 0);
 }
 
 } // namespace Cooling

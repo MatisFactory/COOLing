@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <memory>
+#include <optional>
+
 #include <stdint.h>
 
 namespace Cooling
@@ -24,14 +26,18 @@ public:
 
 	bool hardToDraw() const;
 
+
 	bool isVisible() const;
-	void setVisible(bool value);
-	void setANDVisible(bool value);
+	bool isInFrustumView() const;
+	void setIsInFrustumView(bool value);
+	void setOccludedResult(std::optional<bool> value);
 private:
 	AABB m_aabb;
 	UniqueIndex m_index = 0;
 	bool m_hardToDraw = false;
-	bool m_isVisible = false;
+	bool m_isInFrustumView = false;
+	std::optional<bool> m_isOccluded = std::nullopt;
+	
 };
 
 using ObjectPtr = std::shared_ptr<Object>;

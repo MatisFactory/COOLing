@@ -28,17 +28,27 @@ bool Object::hardToDraw() const
 
 bool Object::isVisible() const
 {
-	return m_isVisible;
+	if (m_isOccluded == std::nullopt)
+	{
+		return m_isInFrustumView;
+	}
+
+	return m_isInFrustumView && m_isOccluded.value();
 }
 
-void Object::setVisible(bool value)
+bool Object::isInFrustumView() const
 {
-	m_isVisible = value;
+	return m_isInFrustumView;
 }
 
-void Object::setANDVisible(bool value)
+void Object::setIsInFrustumView(bool value)
 {
-	m_isVisible &= value;
+	m_isInFrustumView = value;
+}
+
+void Object::setOccludedResult(std::optional<bool> value)
+{
+	m_isOccluded = value;
 }
 
 } // namespace Cooling

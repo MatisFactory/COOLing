@@ -20,23 +20,26 @@ QueriesManager::QueriesManager(std::function<void(AABB)> drawedFunction, Objects
 
 void QueriesManager::runQueries()
 {
-	size_t i = 0;
-	m_queries.resize(m_hardToDrawObjects.size());
 	for (const auto& object : m_hardToDrawObjects)
 	{
-		m_queries[i] = std::make_shared<Query>();
-		m_queries[i]->addQueryTask(m_drawedFunction, object->getAABB());
-		i++;
+		if(object->isInFrustumView())
+		{
+			auto query = std::make_shared<Query>(object);
+			query->addQueryTask(m_drawedFunction, object->getAABB());
+
+			m_queries.push_back(std::move(query));
+		}
 	}
 }
 
 void QueriesManager::applyResult()
 {
-	size_t i = 0;
 	for (const auto& query : m_queries)
 	{
-		m_hardToDrawObjects[i++]->setANDVisible(query->isVisible());
+		query->applyVisibility();
 	}
+
+	m_queries.clear();
 }
 
 } // namespace Cooling
