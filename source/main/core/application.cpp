@@ -28,8 +28,7 @@ Application::Application()
 	: m_cameraManager(m_window)
 {
 	auto& cullingManager = CullingWrapper::instance().cullingManager();
-	cullingManager.setSceneAABB(Cooling::AABB(glm::vec3(-SCENE_WIDTH, -SCENE_HEIGHT, -SCENE_WIDTH),
-												glm::vec3(SCENE_WIDTH, SCENE_HEIGHT, SCENE_WIDTH)));
+	cullingManager.setSceneAABB(SCENE_AABB);
 
 	cullingManager.setEnabled(isCullingOptimizationActive);
 }

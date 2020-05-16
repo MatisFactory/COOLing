@@ -59,6 +59,8 @@ void ObjModelManager::draw()
 			}
 		}
 	}
+
+	//drawBox(SCENE_AABB, false);
 }
 
 bool ObjModelManager::enabledOcclusionQueries() const
