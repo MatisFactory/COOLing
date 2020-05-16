@@ -21,6 +21,8 @@ void ObjModelDrawer::activateShader(Shader& shader)
 {
 	shader.use();
 
+	auto invalidValue = GL_INVALID_VALUE;
+	auto invalidOperation = GL_INVALID_OPERATION;
 	m_colorLocation = glGetUniformLocation(shader.ID, "color");
 	m_transformLocation = glGetUniformLocation(shader.ID, "model");
 	GLint viewLoc = glGetUniformLocation(shader.ID, "view");

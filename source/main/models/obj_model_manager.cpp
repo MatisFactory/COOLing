@@ -8,8 +8,8 @@
 
 namespace
 {
-	constexpr size_t AIRPLANES_COUNT = 1000;
-	constexpr size_t CUBES_COUNT = 500;
+	constexpr size_t AIRPLANES_COUNT = 20000;
+	constexpr size_t CUBES_COUNT = 1000;
 	constexpr float SCALE_AIRPLANE = 20.f;
 	constexpr float SCALE_CUBES_X = 40;
 	constexpr float SCALE_CUBES_Y = 100;
@@ -20,9 +20,12 @@ namespace
 
 	const char* DEFAULT_VERTEX_SHADER = "../../../shaders/SimpleObj.vert";
 	const char* DEFAULT_FRAGMENT_SHADER = "../../../shaders/SimpleObj.frag";
+
+	bool ACTIVE_SHADER_TO_OCCLUSION_QUERY = false;
 }
 
 ObjModelManager::ObjModelManager()
+	: m_shader(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER)
 {
 	loadCubes();
 	loadAirplanes();
@@ -38,13 +41,16 @@ ObjModelManager::ObjModelManager()
 
 void ObjModelManager::draw()
 {
+	ACTIVE_SHADER_TO_OCCLUSION_QUERY = false;
 	m_countDrawed = 0;
 	auto& cullingManager = CullingWrapper::instance().cullingManager();
 
+	m_shader.use();
+	
 	for (auto&[model, info] : m_objModels)
 	{
 		size_t i = 0;
-		info.drawer.activateShader(info.shader);
+		info.drawer.activateShader(m_shader);
 
 		for (const auto& transform : info.transforms)
 		{
@@ -60,7 +66,11 @@ void ObjModelManager::draw()
 		}
 	}
 
-	//drawBox(SCENE_AABB, false);
+	// should be at the end of draw
+	if(m_showSceneAABB)
+	{
+		drawBox(SCENE_AABB, true);
+	}
 }
 
 bool ObjModelManager::enabledOcclusionQueries() const
@@ -71,6 +81,16 @@ bool ObjModelManager::enabledOcclusionQueries() const
 void ObjModelManager::setEnabledOcclusionQueris(bool value)
 {
 	m_occlusionQueryEnabled = value;
+}
+
+bool ObjModelManager::showSceneAABB() const
+{
+	return m_showSceneAABB;
+}
+
+void ObjModelManager::showSceneAABB(bool value)
+{
+	m_showSceneAABB = value;
 }
 
 size_t ObjModelManager::countDrawed() const
@@ -170,6 +190,12 @@ void ObjModelManager::drawBox(const Cooling::AABB& aabb, bool wireframe)
 		cube.loadModel();
 	}
 	static ObjModelDrawer drawer(cube);
+	if(!ACTIVE_SHADER_TO_OCCLUSION_QUERY)
+	{
+		ACTIVE_SHADER_TO_OCCLUSION_QUERY = true;
+		drawer.activateShader(m_shader);
+	}
+	//static Shader shader(DEFAULT_FRAGMENT_SHADER, DEFAULT_VERTEX_SHADER);
 
 	const glm::vec3 halfDiagonal = (aabb.max - aabb.min) * 0.5f;
 	const glm::vec3 position = aabb.min + halfDiagonal;

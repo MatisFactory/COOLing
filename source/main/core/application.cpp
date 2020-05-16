@@ -22,6 +22,7 @@ namespace
 	static bool regularSpacePartitioningAlgorithm = false;
 	static bool rotateNotMainCameraByYaw = false;
 	static bool visualizeNotMainCamera = false;
+	static bool showSceneAABB = false;
 }
 
 Application::Application()
@@ -208,6 +209,12 @@ void Application::addToDrawImGui()
 		if (ImGui::Checkbox("Rotate not main camera", &rotateNotMainCameraByYaw))
 		{
 			m_cameraManager.setRotateByYaw(rotateNotMainCameraByYaw);
+		}
+
+		showSceneAABB = m_objManager.showSceneAABB();
+		if (ImGui::Checkbox("Show scene box", &showSceneAABB))
+		{
+			m_objManager.showSceneAABB(showSceneAABB);
 		}
 
 		ImGui::LabelText("", "Count drawed model: %d", m_objManager.countDrawed());

@@ -37,6 +37,9 @@ public:
 	bool enabledOcclusionQueries() const;
 	void setEnabledOcclusionQueris(bool value);
 
+	bool showSceneAABB() const;
+	void showSceneAABB(bool value);
+
 	size_t countDrawed() const;
 private:
 	void loadAirplanes();
@@ -46,6 +49,8 @@ private:
 	void drawBox(const Cooling::AABB& aabb, bool wireframe = false);
 private:
 	std::unordered_map<ObjModel, ObjModelInfo, ModelHasher> m_objModels;
+	Shader m_shader;
 	bool m_occlusionQueryEnabled = false;
+	bool m_showSceneAABB = false;
 	size_t m_countDrawed = 0;
 };
