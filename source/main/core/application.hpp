@@ -21,6 +21,7 @@ private:
 
 	void tickCameraManager(float dt);
 	void tickCullingManager(float dt);
+	void postUpdateCullingManager();
 	
 	void draw();
 

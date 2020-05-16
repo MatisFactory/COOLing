@@ -7,8 +7,10 @@ QueriesManager::QueriesManager(std::function<void(AABB)> drawedFunction, Objects
 	: m_drawedFunction(std::move(drawedFunction))
 	, m_objects(objects)
 {
+	// TODO: reconsider it
 	glfwInit();
 	glewInit();
+
 	for (auto& object : m_objects)
 	{
 		if (object->hardToDraw())

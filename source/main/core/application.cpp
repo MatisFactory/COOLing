@@ -65,11 +65,10 @@ void Application::update()
 void Application::postUpdate()
 {
 	draw();
-
-	CullingWrapper::instance().cullingManager().runOcclusionQueryTasks();
-
 	addToDrawImGui();
 	drawImGui();
+
+	postUpdateCullingManager();
 
 	glfwSwapBuffers(m_window.getGLFWwindow());
 }
@@ -102,9 +101,12 @@ void Application::tickCullingManager(float dt)
 		cullingManager.setViewProjectionMatrix(firstNotCurrentCamera->getProjection() * firstNotCurrentCamera->getView());
 	}
 
-	GLuint id = 0;
-	glGenQueries(1, &id);
 	cullingManager.update();
+}
+
+void Application::postUpdateCullingManager()
+{
+	CullingWrapper::instance().cullingManager().runOcclusionQueryTasks();
 }
 
 void Application::draw()
