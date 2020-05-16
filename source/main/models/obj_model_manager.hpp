@@ -14,11 +14,13 @@
 
 struct ObjModelInfo
 {
-	ObjModelInfo(const std::vector<glm::mat4>& transforms, const Shader& shader, const ObjModelDrawer& drawer, bool hardToDraw = false)
-		: transforms(transforms), shader(shader), drawer(drawer), hardToDraw(hardToDraw) {}
+	ObjModelInfo(const std::vector<glm::mat4>& transforms, const Shader& shader,
+		const ObjModelDrawer& drawer, const glm::vec3& color = { 0.5, 0.7, 1.0 }, bool hardToDraw = false)
+		: transforms(transforms), shader(shader), drawer(drawer), color(color), hardToDraw(hardToDraw) {}
 	ObjModelInfo() = default;
 
 	std::vector<glm::mat4> transforms;
+	glm::vec3 color;
 	Shader shader;
 	ObjModelDrawer drawer;
 	std::vector<Cooling::UniqueIndex> uids;

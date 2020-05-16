@@ -8,12 +8,15 @@
 
 namespace
 {
-	constexpr size_t AIRPLANES_COUNT = 10000;
+	constexpr size_t AIRPLANES_COUNT = 1000;
 	constexpr size_t CUBES_COUNT = 500;
 	constexpr float SCALE_AIRPLANE = 20.f;
 	constexpr float SCALE_CUBES_X = 40;
 	constexpr float SCALE_CUBES_Y = 100;
 	constexpr float SCALE_CUBES_Z = 20;
+
+	const glm::vec3 CUBE_COLOR = glm::vec3(0.15f, 0.15f, 0.15f);
+	const glm::vec3 AIRPLANE_COLOR = glm::vec3(0.4f, 0.8f, 0.6f);
 
 	const char* DEFAULT_VERTEX_SHADER = "../../../shaders/SimpleObj.vert";
 	const char* DEFAULT_FRAGMENT_SHADER = "../../../shaders/SimpleObj.frag";
@@ -51,7 +54,7 @@ void ObjModelManager::draw()
 				{
 					drawBox(Cooling::transformedAABB(model.getAABB(), transform), true);
 				}*/
-				info.drawer.draw(transform);
+				info.drawer.draw(transform, info.color);
 				m_countDrawed++;
 			}
 		}
@@ -88,7 +91,7 @@ void ObjModelManager::loadAirplanes()
 
 	ObjModel airplane("../../../obj_models/airplane.obj");
 	airplane.loadModel();
-	ObjModelInfo modelInfo({}, Shader(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER), ObjModelDrawer(airplane), true);
+	ObjModelInfo modelInfo({}, Shader(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER), ObjModelDrawer(airplane), AIRPLANE_COLOR, true);
 	auto& transforms = modelInfo.transforms;
 
 	for (size_t i = 0; i < AIRPLANES_COUNT; i++)
@@ -122,7 +125,7 @@ void ObjModelManager::loadCubes()
 
 	ObjModel model("../../../obj_models/cube.obj");
 	model.loadModel();
-	ObjModelInfo modelInfo(transformsOfModels, Shader(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER), ObjModelDrawer(model));
+	ObjModelInfo modelInfo(transformsOfModels, Shader(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER), ObjModelDrawer(model), CUBE_COLOR);
 	auto& transforms = modelInfo.transforms;
 
 	for (size_t i = 0; i < CUBES_COUNT; i++)
@@ -159,6 +162,7 @@ void ObjModelManager::drawBox(const Cooling::AABB& aabb, bool wireframe)
 	// should be active shader
 	// cube from -1 to 1 by each axis
 	static ObjModel cube("../../../obj_models/cube.obj");
+	static const glm::vec3 color = glm::vec3(1.f, 1.f, 1.f);
 	if(!cube.isLoaded())
 	{
 		cube.loadModel();
@@ -176,11 +180,11 @@ void ObjModelManager::drawBox(const Cooling::AABB& aabb, bool wireframe)
 	if (wireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		drawer.draw(transform);
+		drawer.draw(transform, color);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	else
 	{
-		drawer.draw(transform);
+		drawer.draw(transform, color);
 	}
 }

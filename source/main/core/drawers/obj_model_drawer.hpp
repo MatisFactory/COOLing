@@ -14,7 +14,7 @@ public:
 	ObjModelDrawer(const ObjModel& model);
 	
 	void activateShader(Shader& m_shader);
-	void draw(const glm::mat4& transforms);
+	void draw(const glm::mat4& transforms, const glm::vec3& color);
 private:
 	void loadOpenGLObjects();
 private:
@@ -23,6 +23,7 @@ private:
 	std::vector<glm::vec3> m_vertices;
 
 	GLint m_transformLocation;
+	GLint m_colorLocation;
 	GLuint m_VAO;
 	GLuint m_VBO;
 	GLuint m_IBO;

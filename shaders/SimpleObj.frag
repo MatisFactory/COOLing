@@ -1,8 +1,15 @@
 #version 330 core
 
-out vec4 color;
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform vec3 color;
+
+out vec4 outColor;
 
 void main()
 {
-	color = vec4(0.2f, 1.f, 0.9f, 1.f);
+	outColor = vec4(color, 1.0);
 }
+
