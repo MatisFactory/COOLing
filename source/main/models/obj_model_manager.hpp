@@ -44,6 +44,7 @@ public:
 private:
 	void loadAirplanes();
 	void loadCubes();
+	void loadModel(const std::string& filename, size_t count, const glm::vec3& scale = glm::vec3(1.f), const glm::vec3& color = glm::vec4(1.f), bool hardToDraw = true);
 	void addToCullingManager();
 	// used to draw fake box in occlusion query
 	void drawBox(const Cooling::AABB& aabb, bool wireframe = false);

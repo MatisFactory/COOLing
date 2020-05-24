@@ -8,7 +8,7 @@
 
 namespace
 {
-	constexpr size_t AIRPLANES_COUNT = 20000;
+	constexpr size_t AIRPLANES_COUNT = 10000;
 	constexpr size_t CUBES_COUNT = 1000;
 	constexpr float SCALE_AIRPLANE = 20.f;
 	constexpr float SCALE_CUBES_X = 40;
@@ -29,6 +29,11 @@ ObjModelManager::ObjModelManager()
 {
 	loadCubes();
 	loadAirplanes();
+	//loadModel("../../../obj_models/cat.obj", 20000, glm::vec3(20.f, 20.f, 20.f), glm::vec4(1.f), false);
+	//loadModel("../../../obj_models/gun1.obj", 10000, glm::vec3(20.f, 20.f, 20.f), glm::vec4(1.f), true);
+	/*loadModel("../../../obj_models/Leopard.obj", 1000, glm::vec3(20.f, 20.f, 20.f), glm::vec4(1.f), true);
+	loadModel("../../../obj_models/IS7.obj", 1000, glm::vec3(20.f, 20.f, 20.f), glm::vec4(1.f), true);*/
+	//loadModel("../../../obj_models/t_34_obj.obj", 1000, glm::vec3(20.f, 20.f, 20.f), glm::vec4(1.f), false);
 
 	addToCullingManager();
 	auto& cullingManager = CullingWrapper::instance().cullingManager();
@@ -155,6 +160,38 @@ void ObjModelManager::loadCubes()
 		glm::mat4 transform = glm::mat4(1.f);
 
 		transform = glm::scale(transform, glm::vec3(SCALE_CUBES_X, SCALE_CUBES_Y, SCALE_CUBES_Z));
+
+		transform[3][0] = plate(gen);
+		transform[3][1] = vertical(gen);
+		transform[3][2] = plate(gen);
+
+		transforms.push_back(transform);
+	}
+
+	m_objModels[model] = modelInfo;
+}
+
+void ObjModelManager::loadModel(const std::string& filename, size_t count, const glm::vec3& scale, const glm::vec3& color, bool hardToDraw)
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution plate(-SCENE_WIDTH, SCENE_WIDTH);
+	std::uniform_real_distribution vertical(-SCENE_HEIGHT, SCENE_HEIGHT);
+
+	// load model
+	std::vector<glm::mat4> transformsOfModels;
+	transformsOfModels.reserve(count);
+
+	ObjModel model(filename);
+	model.loadModel();
+	ObjModelInfo modelInfo(transformsOfModels, Shader(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER), ObjModelDrawer(model), color, hardToDraw);
+	auto& transforms = modelInfo.transforms;
+
+	for (size_t i = 0; i < count; i++)
+	{
+		glm::mat4 transform = glm::mat4(1.f);
+
+		transform = glm::scale(transform, glm::vec3(scale.x, scale.y, scale.z));
 
 		transform[3][0] = plate(gen);
 		transform[3][1] = vertical(gen);
