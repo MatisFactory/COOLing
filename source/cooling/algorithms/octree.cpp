@@ -24,8 +24,6 @@ void Octree::init(const Objects& objects, const AABB& sceneAABB)
 
 void Octree::cullObjects(const FrustumPlanes& planes)
 {
-	Profiler p("Octree::cullObjects");
-
 	recursiveProccessOctree(&m_root, planes);
 }
 

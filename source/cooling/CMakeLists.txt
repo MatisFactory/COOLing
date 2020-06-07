@@ -8,6 +8,8 @@ set(FILES
      algorithms/algorithm.hpp
      algorithms/basic_culling_algorithm.cpp
      algorithms/basic_culling_algorithm.hpp
+	 algorithms/bounding_volume_hierarchy.cpp
+	 algorithms/bounding_volume_hierarchy.hpp
      algorithms/octree.cpp
      algorithms/octree.hpp
      algorithms/regular_space_partitioning.cpp

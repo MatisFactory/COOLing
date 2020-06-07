@@ -3,6 +3,7 @@
 #include <main/core/culling_wrapper.hpp>
 
 #include <cooling/utils/aabb.hpp>
+#include <cooling/profiler/profiler.hpp>
 
 #include <glm/glm.hpp>
 
@@ -19,6 +20,7 @@ namespace
 	static bool cullObjectsForNotCurrentCamera = false;
 	static bool basicCullingAlgorithm = false;
 	static bool octreeAlgorithm = false;
+	static bool bvh = false;
 	static bool regularSpacePartitioningAlgorithm = false;
 	static bool rotateNotMainCameraByYaw = false;
 	static bool visualizeNotMainCamera = false;
@@ -89,6 +91,8 @@ void Application::tickCameraManager(float dt)
 
 void Application::tickCullingManager(float dt)
 {
+	Cooling::Profiler p("cull");
+
 	Camera* firstNotCurrentCamera = m_cameraManager.getFirstNotCurrentCamera();
 	auto& cullingManager = CullingWrapper::instance().cullingManager();
 
@@ -192,6 +196,10 @@ void Application::addToDrawImGui()
 		if (ImGui::Checkbox("Octree algorithm", &octreeAlgorithm))
 		{
 			cullingManager.setAlgorithm(octreeAlgorithm ? Cooling::OctreeCulling : Cooling::None);
+		}
+		if (ImGui::Checkbox("BVH algorithm", &bvh))
+		{
+			cullingManager.setAlgorithm(bvh ? Cooling::BVH : Cooling::None);
 		}
 		bool enabledOcclusionQuery = cullingManager.occlusionQueryEnabled();
 		if (ImGui::Checkbox("Occlusion culling", &enabledOcclusionQuery))

@@ -8,7 +8,7 @@
 
 namespace
 {
-	constexpr size_t AIRPLANES_COUNT = 10000;
+	constexpr size_t AIRPLANES_COUNT = 7500;
 	constexpr size_t CUBES_COUNT = 1000;
 	constexpr float SCALE_AIRPLANE = 20.f;
 	constexpr float SCALE_CUBES_X = 40;
@@ -27,9 +27,9 @@ namespace
 ObjModelManager::ObjModelManager()
 	: m_shader(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER)
 {
-	loadCubes();
-	loadAirplanes();
-	//loadModel("../../../obj_models/cat.obj", 20000, glm::vec3(20.f, 20.f, 20.f), glm::vec4(1.f), false);
+	//loadCubes();
+	//loadAirplanes();
+	loadModel("../../../obj_models/cat.obj", 500000, glm::vec3(1, 1, 1), glm::vec4(1.f), false);
 	//loadModel("../../../obj_models/gun1.obj", 10000, glm::vec3(20.f, 20.f, 20.f), glm::vec4(1.f), true);
 	/*loadModel("../../../obj_models/Leopard.obj", 1000, glm::vec3(20.f, 20.f, 20.f), glm::vec4(1.f), true);
 	loadModel("../../../obj_models/IS7.obj", 1000, glm::vec3(20.f, 20.f, 20.f), glm::vec4(1.f), true);*/
@@ -61,10 +61,6 @@ void ObjModelManager::draw()
 		{
 			if (cullingManager.isVisible(info.uids[i++]))
 			{
-			/*	if (info.hardToDraw)
-				{
-					drawBox(Cooling::transformedAABB(model.getAABB(), transform), true);
-				}*/
 				info.drawer.draw(transform, info.color);
 				m_countDrawed++;
 			}

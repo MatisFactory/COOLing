@@ -20,6 +20,7 @@ enum AlgoritmFilter : uint32_t
 	Basic = 1 << 1,
 	AlRegularSpacePartitioning = 1 << 2,
 	OctreeCulling = 1 << 3,
+	BVH = 1 << 4,
 };
 
 class COOLING_DLL CullingManager

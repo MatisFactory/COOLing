@@ -71,8 +71,6 @@ void RegularSpacePartitioning::init(const Objects& objects, const AABB& sceneAAB
 
 void RegularSpacePartitioning::cullObjects(const FrustumPlanes& planes)
 {
-	Profiler p("BasicCullingAlgorithm::cullObjects");
-
 	for (auto& node : m_nodes)
 	{
 		if (isAABBVisible(planes, node.aabb))

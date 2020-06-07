@@ -14,8 +14,6 @@ void BasicCullingAlgorithm::init(const Objects& objects, const AABB& sceneAABB)
 
 void BasicCullingAlgorithm::cullObjects(const FrustumPlanes& planes)
 {
-	Profiler p("BasicCullingAlgorithm::cullObjects");
-
 	for (auto& object : m_objects)
 	{
 		if (isAABBVisible(planes, object->getAABB()))

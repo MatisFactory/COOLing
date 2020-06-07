@@ -1,6 +1,7 @@
 #include <cooling/culling_manager.hpp>
 #include <cooling/utils/visibility_tests.hpp>
 #include <cooling/algorithms/basic_culling_algorithm.hpp>
+#include <cooling/algorithms/bounding_volume_hierarchy.hpp>
 #include <cooling/algorithms/octree.hpp>
 #include <cooling/algorithms/regular_space_partitioning.hpp>
 
@@ -106,6 +107,10 @@ void CullingManager::setAlgorithm(uint32_t algorithm)
 	else if (m_algorithmFilter & OctreeCulling)
 	{
 		m_algorithm = std::make_unique<Octree>();
+	}
+	else if (m_algorithmFilter & BVH)
+	{
+		m_algorithm = std::make_unique<BoundingVolumeHierarchy>();
 	}
 
 	m_algorithm->init(m_objects, m_sceneAABB);
